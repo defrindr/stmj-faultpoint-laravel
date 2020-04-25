@@ -39,11 +39,11 @@ class all extends Command
     {
         system("php artisan make:model ".$this->argument('name'). "Model");
         $this->info('Success Generate Model ... ');
-        system("php artisan make:controller ". $this->argument('name'). " --model=Models/". $this->argument('name'). "Model");
+        system("php artisan make:controller ". $this->argument('name'). "Controller --model=Models/". $this->argument('name'). "Model");
         $this->info('Success Generate Controller ... ');
         system("php artisan make:request ". $this->argument('name'). "Request");
         $this->info('Success Generate Request ... ');
-        system("php artisan make:migration create_table_". $this->argument('name'). " --create=". $this->argument('name'));
+        system("php artisan make:migration create_table_". strtolower($this->argument('name')). " --create=". strtolower($this->argument('name')). "s");
         $this->info('Success Generate Migration ... ');
         system("php artisan make:seeder ". $this->argument('name'). "Seeder");
         $this->info('Success Generate Seeder ... ');

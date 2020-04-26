@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'asia/jakarta',
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'id',
 
     /*
     |--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'en',
+    'fallback_locale' => 'id',
 
     /*
     |--------------------------------------------------------------------------
@@ -106,7 +106,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'id_ID',
 
     /*
     |--------------------------------------------------------------------------
@@ -175,6 +175,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+
+        // https://github.com/yajra/laravel-datatables
+        Yajra\DataTables\DataTablesServiceProvider::class,
+
     ],
 
     /*
@@ -226,6 +230,17 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+
+        // Yii Similiar Helper
+
+        'HtmlHelper' => App\Helpers\Html\HtmlHelper::class,
+        'Str' => App\Helpers\String\StringHelper::class,
+        'ArrayHelper' => App\Helpers\ArrayHelper::class,
+        'ArrayHelper' => App\Helpers\ArrayHelper::class,
+
+        // https://github.com/yajra/laravel-datatables
+        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
 
     ],
 

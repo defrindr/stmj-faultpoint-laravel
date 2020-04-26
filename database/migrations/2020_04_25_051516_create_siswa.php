@@ -16,6 +16,13 @@ class CreateSiswa extends Migration
         Schema::create('siswa', function (Blueprint $table) {
             $table->unsignedBigInteger("nip")->unique();
             $table->string("nama");
+            $table->text("alamat_rumah");
+            $table->text("alamat_domisili");
+            $table->string("tempat_lahir");
+            $table->date("tanggal_lahir");
+            $table->text("no_telp");
+            $table->text("nama_wali");
+            $table->text("no_telp_wali");
             $table->bigInteger("point_pelanggaran");
             $table->bigInteger("point_penghargaan");
             $table->timestamps();

@@ -12,6 +12,13 @@ class Siswa extends Model
         "nip",
         "kelas_id",
         "nama",
+        "alamat_rumah",
+        "alamat_domisili",
+        "tempat_lahir",
+        "tanggal_lahir",
+        "no_telp",
+        "nama_wali",
+        "no_telp_wali",
         "point_pelanggaran",
         "point_penghargaan",
     ];

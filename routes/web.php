@@ -32,6 +32,10 @@ Route::group(['middleware' => 'auth'],function(){
       Route::get('/','HariEfektifController@index')->name('index');
       Route::put('/update/{data}','HariEfektifController@update')->name('update');
     });
+    // route jurusan
+    Route::resource('jurusan','JurusanController')->except([
+      'show'
+    ]);
 });
 
 
@@ -49,4 +53,5 @@ Route::group(['middleware' => 'auth'],function(){
 */
 Route::group(["middleware"=> "auth","prefix" => "datatables","as" => "datatables."],function(){
     Route::get("hari-efektif/json","HariEfektifController@json")->name("hari-efektif");
+    Route::get("jurusan/json","JurusanController@json")->name("jurusan");
 });

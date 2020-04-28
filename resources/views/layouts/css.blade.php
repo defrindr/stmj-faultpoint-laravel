@@ -2,7 +2,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="/fa/css/all.min.css">
-  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="/css/app.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="/css/adminlte.min.css">
   <link rel="stylesheet" href="/css/select2.min.css">

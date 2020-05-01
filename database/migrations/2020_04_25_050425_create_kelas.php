@@ -19,6 +19,7 @@ class CreateKelas extends Migration
             $table->boolean("kelas_xi");
             $table->boolean("kelas_xii");
             $table->char("grade");
+            $table->string("tahun_ajaran");
             $table->timestamps();
         });
     }

@@ -36,6 +36,16 @@ Route::group(['middleware' => 'auth'],function(){
     Route::resource('jurusan','JurusanController')->except([
       'show'
     ]);
+    // route kelas
+    Route::resource('kelas','KelasController')->parameters([
+      'kelas' => 'kelas'
+    ]);
+    Route::post('kelas/guru/json','KelasController@guru')->name('kelas.guru');
+    // route siswa
+    Route::resource('siswa','SiswaController')->except([
+      'index'
+    ]);
+    
 });
 
 
@@ -54,4 +64,6 @@ Route::group(['middleware' => 'auth'],function(){
 Route::group(["middleware"=> "auth","prefix" => "datatables","as" => "datatables."],function(){
     Route::get("hari-efektif/json","HariEfektifController@json")->name("hari-efektif");
     Route::get("jurusan/json","JurusanController@json")->name("jurusan");
+    Route::get("kelas/json","KelasController@json")->name("kelas");
+    Route::get('kelas/{kelas}/siswa/json','SiswaController@json')->name('kelas.show.siswa');
 });

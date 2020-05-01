@@ -23,7 +23,7 @@ class Relation extends Migration
             $table->foreignId("user_id")->constrained();
         });
         Schema::table('siswa', function (Blueprint $table) {
-            $table->foreignId("kelas_id")->constrained("kelas");
+            $table->foreignId("kelas_id")->constrained("kelas")->onDelete('cascade');
         });
         Schema::table('point', function (Blueprint $table) {
             $table->foreignId("kategori_point_id")->constrained("kategori_point");

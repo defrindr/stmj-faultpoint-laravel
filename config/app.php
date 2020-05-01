@@ -235,7 +235,7 @@ return [
         // Yii Similiar Helper
 
         'HtmlHelper' => App\Helpers\Html\HtmlHelper::class,
-        'Str' => App\Helpers\String\StringHelper::class,
+        'CStr' => App\Helpers\String\StringHelper::class,
         'ArrayHelper' => App\Helpers\ArrayHelper::class,
         'ArrayHelper' => App\Helpers\ArrayHelper::class,
 

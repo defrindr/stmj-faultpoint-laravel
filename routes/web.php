@@ -42,7 +42,7 @@ Route::group(['middleware' => 'auth'],function(){
     ]);
     Route::post('kelas/guru/json','KelasController@guru')->name('kelas.guru');
     // route siswa
-    Route::resource('siswa','SiswaController')->except([
+    Route::resource('/kelas/{kelas}/siswa','SiswaController')->except([
       'index'
     ]);
     

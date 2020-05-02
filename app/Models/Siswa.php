@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Siswa extends Model
 {
+    public $incrementing = false;
     protected $table = "siswa";
     protected $primaryKey = "nip";
     protected $fillable = [

@@ -45,6 +45,12 @@ Route::group(['middleware' => 'auth'],function(){
     Route::resource('/kelas/{kelas}/siswa','SiswaController')->except([
       'index'
     ]);
+    //route hari tidak efektif
+    Route::resource('hari-tidak-efektif','HariTidakEfektifController');
+    //route kategori point
+    Route::resource('kategori-point','KategoriPointController');
+    //route point
+    Route::resource('point','PointController');
     
 });
 

@@ -14,7 +14,10 @@ class Point extends Model
         "point",
         "sanksi",
     ];
-
+    public function kategori_point()
+{
+    return $this->belongsTo(kategoriPoint::class);
+}
     function kasus() {
         return $this->hasMany('App\Models\Kasus');
     }

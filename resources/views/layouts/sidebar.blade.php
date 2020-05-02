@@ -15,12 +15,12 @@ $sidebar = [
     "children" => [
       [
         "title" => "Jurusan",
-        "link" => "#",
+        "link" => route('jurusan.index'),
         "icon" => "",
       ],
       [
         "title" => "Hari Efektif",
-        "link" => "#",
+        "link" => route('hari-efektif.index'),
         "icon" => "",
       ],
       [
@@ -31,26 +31,9 @@ $sidebar = [
     ]
   ],
   [
-    "title" => "Menu 1",
-    "link" => "#",
-    "icon" => "fas fa-th",
-    "children" => [
-      [
-        "title" => "Sub Menu 1",
-        "link" => "#",
-        "icon" => "",
-      ],
-      [
-        "title" => "Sub Menu 2",
-        "link" => "#",
-        "icon" => "",
-      ],
-    ]
-  ],
-  [
-    "title" => "Setting",
-    "link" => "#",
-    "icon" => "fas fa-cogs",
+    "title" => "Kelas",
+    "link" => route('kelas.index'),
+    "icon" => "fas fa-users",
   ]
 ];
 

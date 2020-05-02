@@ -58,7 +58,7 @@ $(function() {
                 let form = $(this).parents('form');
                 Swal.fire({
                     title: "Apakah anda yakin?",
-                    text: "Data akan ditambahkan ke dalam database setelah proses ini dijalankan.",
+                    text: "Data akan dihapus secara permanen dari database setelah proses ini dijalankan.",
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
                     confirmButtonText: "Ya!",

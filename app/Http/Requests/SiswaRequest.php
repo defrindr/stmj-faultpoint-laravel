@@ -38,6 +38,10 @@ class SiswaRequest extends FormRequest
             $rules += [
                 'nip' => 'required|numeric|unique:siswa,nip',
             ];
+        }else{
+            $rules += [
+                'nip' => 'required|numeric|unique:siswa,nip,'. $request->siswa->id,
+            ];
         }
         
 

@@ -51,6 +51,12 @@ Route::group(['middleware' => 'auth'],function(){
     Route::post('/user/{user}/storerole','UserController@storeRole')->name('user.store-role');
     Route::delete('/user/{user}/removerole/{userRole}','UserController@removeRole')->name('user.remove-role');
     Route::post('/user/{user}/reset-password','UserController@resetPassword')->name('user.reset-password');
+    //route hari tidak efektif
+    Route::resource('hari-tidak-efektif','HariTidakEfektifController');
+    //route kategori point
+    Route::resource('kategori-point','KategoriPointController');
+    //route point
+    Route::resource('point','PointController');
 });
 
 

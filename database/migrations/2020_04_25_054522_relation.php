@@ -30,14 +30,14 @@ class Relation extends Migration
         });
         Schema::table('kasus', function (Blueprint $table) {
             $table->unsignedBigInteger("siswa_nip");
-            $table->foreign("siswa_nip")->references("nip")->on("siswa");
+            $table->foreign("siswa_nip")->references("nip")->on("siswa")->onDelete('cascade');
 
             $table->foreignId("point_id")->constrained("point");
             $table->foreignId("user_id")->constrained("users");
         });
         Schema::table('absensi', function (Blueprint $table) {
             $table->unsignedBigInteger("siswa_nip");
-            $table->foreign("siswa_nip")->references("nip")->on("siswa");
+            $table->foreign("siswa_nip")->references("nip")->on("siswa")->onDelete('cascade');
 
             $table->foreignId("user_id")->constrained("users");
         });

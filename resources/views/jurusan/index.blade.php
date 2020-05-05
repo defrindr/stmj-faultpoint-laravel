@@ -31,7 +31,8 @@
         $('#hari-efektif-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '<?= route("datatables.jurusan") ?>',
+            responsive: true,
+            ajax: '{{ route("datatables.jurusan") }}',
             columns: [{
                     data: 'id',
                     name: 'id'

@@ -37,12 +37,16 @@ class JurusanController extends Controller
      */
     public function store(JurusanRequest $request)
     {
-        $data = new Jurusan($request->all());
+        $data = new Jurusan( $request->all() );
 
         if($data->save()){
-            return redirect()->route('jurusan.index')->with('success','Jurusan berhasil disimpan');
+            return redirect()
+                ->route('jurusan.index')
+                ->with('success','Jurusan berhasil disimpan');
         }else{
-            return redirect()->route('jurusan.index')->with('error','Jurusan gagal disimpan');
+            return redirect()
+                ->route('jurusan.index')
+                ->with('error','Jurusan gagal disimpan');
         }
     }
 
@@ -55,9 +59,7 @@ class JurusanController extends Controller
      */
     public function edit(Jurusan $jurusan)
     {
-        return view('jurusan.edit',[
-            'jurusan' => $jurusan
-        ]);
+        return view('jurusan.edit', compact('jurusan'));
     }
 
     /**
@@ -69,12 +71,14 @@ class JurusanController extends Controller
      */
     public function update(JurusanRequest $request, Jurusan $jurusan)
     {
-        if($jurusan->update(
-            $request->all()
-        )){
-            return redirect()->route('jurusan.index')->with('success','Jurusan berhasil diubah');
+        if($jurusan->update( $request->all() )) {
+            return redirect()
+                ->route('jurusan.index')
+                ->with('success','Jurusan berhasil diubah');
         }else{
-            return redirect()->route('jurusan.index')->with('error','Jurusan gagal diubah');
+            return redirect()
+                ->route('jurusan.index')
+                ->with('error','Jurusan gagal diubah');
         }
     }
 
@@ -86,12 +90,14 @@ class JurusanController extends Controller
      */
     public function destroy(Jurusan $jurusan)
     {
-        $nama = $jurusan->nama;
-
         if($jurusan->delete()){
-            return redirect()->route('jurusan.index')->with('success',"Jurusan $nama berhasil dihapus");
+            return redirect()
+                ->route('jurusan.index')
+                ->with('success', 'Jurusan berhasil dihapus');
         }else{
-            return redirect()->route('jurusan.index')->with('success',"Jurusan $nama gagal dihapus");
+            return redirect()
+                ->route('jurusan.index')
+                ->with('success', 'Jurusan gagal dihapus');
         }
     }
 
@@ -100,15 +106,16 @@ class JurusanController extends Controller
     {
         $data = Jurusan::all();
 
-        return datatables()
+        $datatables = datatables()
                 ->of($data)
                 ->addColumn('action',function($data){
-                    $routeEdit = route('jurusan.edit',['jurusan' => $data]);
-                    $routeDelete = route('jurusan.destroy',['jurusan' => $data]);
+                    $routeEdit = route('jurusan.edit',$data);
+                    $routeDelete = route('jurusan.destroy',$data);
+                    
                     $token = csrf_token();
 
                     $button = "
-                            <a  href='$routeEdit' class='btn btn-primary mb-1 mr-1'>
+                            <a href='$routeEdit' class='btn btn-primary mb-1 mr-1'>
                                 <span class='fa fa-pencil-alt'></span> Ubah
                             </a>
                             <form  action='$routeDelete' class='d-inline-block' method='post'>
@@ -117,11 +124,13 @@ class JurusanController extends Controller
                                 <button class='btn btn-danger mb-1 mr-1 deleteAlerts'>
                                     <span class='fa fa-trash-alt'></span> Hapus
                                 </button>
-                            </a>
-                            ";
+                            </a>";
+
                     return $button;
                 })
                 ->make(true);
+        
+                return $datatables;
     }
 
 }

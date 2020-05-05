@@ -25,7 +25,6 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('/', function () {
         return view('welcome');
     });
-    Route::get('/home', 'HomeController@index')->name('home');
 
     // route hari efektif
     Route::group(["prefix" => "hari-efektif","as" => "hari-efektif."],function() {

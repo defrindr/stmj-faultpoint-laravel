@@ -31,8 +31,10 @@ class KelasController extends Controller
     public function create()
     {
         $tahun = [];
-        $startYear = ((int) date('Y'));
-        $endYear = ((int) date('Y')) + 6;
+        
+        $startYear = date('Y');
+        $endYear = date('Y') + 6;
+
         while($startYear < $endYear){
             $schema = $startYear. "/". ($startYear+1);
             array_push($tahun,$schema);
@@ -41,10 +43,7 @@ class KelasController extends Controller
 
         $jurusan = Jurusan::select(['id','nama'])->get();
 
-        return view('kelas.create',[
-            'tahun' => $tahun,
-            'jurusan' => $jurusan
-        ]);
+        return view('kelas.create',compact('jurusan','tahun'));
     }
 
     /**
@@ -68,10 +67,13 @@ class KelasController extends Controller
         $kelas = new Kelas($schema);
 
         if($kelas->save()){
-            return redirect()->route('kelas.show',[
-                'kelas'=>$kelas])->with('success','Kelas berhasil dibuat');
+            return redirect()
+                ->route('kelas.show', $kelas)
+                ->with('success', 'Kelas berhasil dibuat.');
         }else{
-            return redirect()->route('kelas.create')->with('error','Kelas gagal dibuat');
+            return redirect()
+                ->route('kelas.create')
+                ->with('error', 'Kelas gagal dibuat.');
         }
 
     }
@@ -84,9 +86,7 @@ class KelasController extends Controller
      */
     public function show(Kelas $kelas)
     {
-        return view('kelas.show',[
-            'kelas' => $kelas,
-        ]);
+        return view('kelas.show', compact('kelas'));
     }
 
     /**
@@ -97,12 +97,7 @@ class KelasController extends Controller
      */
     public function edit(Kelas $kelas)
     {
-
-        $jurusan = Jurusan::select(['id','nama'])->get();
-
-        return view('kelas.edit',[
-            'kelas' => $kelas,
-        ]);
+        return view('kelas.edit', compact('kelas'));
     }
 
     /**
@@ -119,13 +114,13 @@ class KelasController extends Controller
         ];
 
         if($kelas->update($schema)){
-            return redirect()->route('kelas.show',[
-                'kelas' => $kelas
-            ])->with('success','Kelas berhasil diubah');
+            return redirect()
+                ->route('kelas.show', $kelas)
+                ->with('success', 'Kelas berhasil diubah.');
         }else{
-            return redirect()->route('kelas.show',[
-                'kelas' => $kelas
-            ])->with('error','Kelas gagal diubah');
+            return redirect()
+                ->route('kelas.show', $kelas)
+                ->with('error', 'Kelas gagal diubah.');
         }
     }
 
@@ -137,20 +132,27 @@ class KelasController extends Controller
      */
     public function destroy(Kelas $kelas)
     {
+        DB::beginTransaction();
+
         try{
-            if($kelas->delete()){
-                return redirect()->route('kelas.index')->with('success','Kelas berhasil dihapus');
-            }else{
-                return redirect()->route('kelas.index')->with('error','Kelas gagal dihapus');
-            }
+            $kelas->delete();
+
+            DB::commit();
+
+            return redirect()
+                ->route('kelas.index')
+                ->with('success', 'Kelas berhasil dihapus.');
         }catch(\Exception $e){
-            return redirect()->route('kelas.index')->with('error','Kelas gagal dihapus. Terdapat anak dari data ini.');
+            DB::rollback();
+            return redirect()
+                ->route('kelas.index')
+                ->with('error', 'Kelas gagal dihapus. Terdapat anak dari data ini.');
         }
     }
 
     public function json(){
 
-        $data = Kelas::all();
+        $data = Kelas::orderBy('created_at','DESC')->get();
 
         return datatables()
                 ->of($data)
@@ -158,34 +160,47 @@ class KelasController extends Controller
                     return $data->getKelas();
                 })
                 ->addColumn('prefix',function($data){
-                    
                     return $data->getPrefix();
                 })
                 ->editColumn('jurusan',function($data){
                     return $data->jurusan->nama;
                 })
-                ->removeColumn(['kelas_x','kelas_xi','kelas_xii'])
+                ->removeColumn([
+                    'kelas_x',
+                    'kelas_xi',
+                    'kelas_xii',
+                ])
                 ->addColumn('action',function($data){
-                    $routeEdit = route('kelas.edit',['kelas' => $data]);
-                    $routeShow = route('kelas.show',['kelas' => $data]);
-                    $routeDelete = route('kelas.destroy',['kelas' => $data]);
-                    $token = csrf_token();
+                    $routeEdit = route('kelas.edit', $data);
+                    $routeDetail = route('kelas.show', $data);
+                    $routeDestroy = route('kelas.destroy', $data);
 
-                    $button = "
-                            <a  href='$routeEdit' class='btn btn-primary mb-1 mr-1'>
-                                <span class='fa fa-pencil-alt'></span> Ubah
-                            </a>
-                            <a  href='$routeShow' class='btn btn-warning mb-1 mr-1'>
+                    $token = csrf_token();
+                    $method = "<input type='hidden' name='_method' value='delete'>";
+                    $csrf = "<input type='hidden' name='_token' value='$token'>";
+
+                    $buttonEdit = "
+                            <a href='$routeEdit' class='btn btn-primary mb-1 mr-1'>
+                                <i class='fa fa-pencil-alt'></i> Ubah
+                            </a>";
+                    
+                    $buttonDetail = "
+                            <a href='$routeDetail' class='btn btn-warning mb-1 mr-1'>
                                 <span class='fas fa-eye'></span> Detail
-                            </a>
-                            <form  action='$routeDelete' class='d-inline-block' method='post'>
-                                <input type='hidden' name='_method' value='delete'>
-                                <input type='hidden' name='_token' value='$token'>
+                            </a>";
+
+                    $buttonDestroy = "
+                            <form action='$routeDestroy' class='d-inline-block' method='post'>
+                                $csrf
+                                $method
                                 <button class='btn btn-danger mb-1 mr-1 deleteAlerts'>
                                     <span class='fa fa-trash-alt'></span> Hapus
                                 </button>
-                            </a>
-                            ";
+                            </a>";
+
+                        
+
+                    $button = "$buttonEdit $buttonDetail $buttonDestroy";
                     return $button;
                 })
                 ->make(true);

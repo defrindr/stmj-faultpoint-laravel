@@ -1,12 +1,7 @@
 @extends('layouts.main')
 
-
-@push('title')
-Detail Kelas
-@endpush
-@push('header-title')
-Detail Kelas
-@endpush
+@push('title', 'Detail Kelas')
+@push('header-title', 'Detail Kelas')
 
 @section('content')
 <div class="col-md-12">
@@ -14,7 +9,7 @@ Detail Kelas
     <div class="card card-default">
         <div class="card-header">
             <a href="{{ route('kelas.index') }}" class="btn btn-danger mb-2 mr-1">Kembali</a>
-            <a href="{{ route('kelas.edit',['kelas' => $kelas]) }}" class="btn btn-primary mb-2 mr-1">Ubah</a>
+            <a href="{{ route('kelas.edit', $kelas) }}" class="btn btn-primary mb-2 mr-1">Ubah</a>
         </div>
         <div class="card-body">
             <table class="table table-hover table-stripped">
@@ -41,7 +36,7 @@ Detail Kelas
 <div class="col-md-12">
     <div class="card card-success">
         <div class="card-header">
-            <a href="{{ route('siswa.create',['kelas' => $kelas]) }}" class="btn btn-success mb-1 mr-1">Tambah Siswa</a>
+            <a href="{{ route('siswa.create', $kelas) }}" class="btn btn-success mb-1 mr-1">Tambah Siswa</a>
         </div>
         <div class="card-body">
             <table id="table-siswa" class="table table-hover table-stripped table-borderless w-100">
@@ -60,14 +55,14 @@ Detail Kelas
 
 @push('_js')
 <script>
-$(function () {
-    $(document).ready(function () {
-        $('#table-siswa').DataTable({
-            processing: true,
-            serverSide: true,
-            responsive: true,
-            ajax: "{{ route('datatables.kelas.show.siswa',['kelas' => $kelas]) }}",
-            columns: [{
+    $(function () {
+        $(document).ready(function () {
+            $('#table-siswa').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                ajax: "{{ route('datatables.kelas.show.siswa', $kelas) }}",
+                columns: [{
                         data: 'nip',
                         name: 'nip'
                     },
@@ -87,25 +82,26 @@ $(function () {
                         data: 'action',
                         name: 'action'
                     },
-            ],
-            drawCallback: function(settings){
-                $('.deleteAlerts').on('click', function(e) {
-                    e.preventDefault();
-                    let form = $(this).parents('form');
-                    Swal.fire({
-                        title: "Apakah anda yakin?",
-                        text: "Data akan dihapus secara permanen dari database setelah proses ini dijalankan.",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Ya!",
-                        cancelButtonText: 'Tidak',
-                    }).then( (result) =>{
-                        if(result.value) $(form).submit();
+                ],
+                drawCallback: function (settings) {
+                    $('.deleteAlerts').on('click', function (e) {
+                        e.preventDefault();
+                        let form = $(this).parents('form');
+                        Swal.fire({
+                            title: "Apakah anda yakin?",
+                            text: "Data akan dihapus secara permanen dari database setelah proses ini dijalankan.",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Ya!",
+                            cancelButtonText: 'Tidak',
+                        }).then((result) => {
+                            if (result.value) $(form).submit();
+                        });
                     });
-                });
-            }
+                }
+            });
         });
     });
-});
+
 </script>
 @endpush

@@ -42,12 +42,16 @@ class KategoriPointController extends Controller
      */
     public function store(KategoriPointRequest $request)
     {
-        $kategoriPoint = new KategoriPoint($request->all());
+        $kategoriPoint = new KategoriPoint( $request->all() );
 
         if($kategoriPoint->save())
-            return redirect()->route('kategori-point.index')->with('success','Kategori point berhasil ditambahkan');
+            return redirect()
+                ->route('kategori-point.index')
+                ->with('success', 'Kategori point berhasil ditambahkan');
         else
-            return redirect()->route('kategori-point.index')->with('error','Kategori point gagal ditambahkan');
+            return redirect()
+                ->route('kategori-point.index')
+                ->with('error', 'Kategori point gagal ditambahkan');
     }
 
     /**
@@ -57,7 +61,7 @@ class KategoriPointController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(KategoriPoint $kategoriPoint){
-        return view('kategori-point.show',compact('kategoriPoint'));
+        return view('kategori-point.show', compact('kategoriPoint'));
     }
 
 
@@ -74,7 +78,7 @@ class KategoriPointController extends Controller
             'negatif'
         ];
 
-        return view('kategori-point.edit',compact('kategoriPoint','jenisPoint'));
+        return view('kategori-point.edit', compact('kategoriPoint','jenisPoint'));
     }
 
     /**
@@ -86,10 +90,14 @@ class KategoriPointController extends Controller
      */
     public function update(KategoriPointRequest $request, KategoriPoint $kategoriPoint)
     {
-        if($kategoriPoint->update($request->all()))
-            return redirect()->route('kategori-point.index')->with('success','Kategori point berhasil diubah');
+        if($kategoriPoint->update( $request->all() ))
+            return redirect()
+                ->route('kategori-point.index')
+                ->with('success', 'Kategori point berhasil diubah');
         else
-            return redirect()->route('kategori-point.index')->with('success','Kategori point gagal diubah');
+            return redirect()
+                ->route('kategori-point.index')
+                ->with('success', 'Kategori point gagal diubah');
     }
 
     /**
@@ -101,9 +109,13 @@ class KategoriPointController extends Controller
     public function destroy(KategoriPoint $kategoriPoint)
     {
         if($kategoriPoint->delete())
-            return redirect()->route('kategori-point.index')->with('success','Kategori point berhasil dihapus');
+            return redirect()
+                ->route('kategori-point.index')
+                ->with('success', 'Kategori point berhasil dihapus');
         else
-            return redirect()->route('kategori-point.index')->with('error','Kategori point gagal dihapus');
+            return redirect()
+                ->route('kategori-point.index')
+                ->with('error', 'Kategori point gagal dihapus');
     }
 
     /**
@@ -111,7 +123,9 @@ class KategoriPointController extends Controller
      * 
      */
     public function json(){
-        $kategoriPoint = KategoriPoint::orderBy('created_at','DESC')->select(['id','nama','jenis_point'])->get();
+        $kategoriPoint = KategoriPoint::orderBy('created_at','DESC')
+            ->select(['id','nama','jenis_point'])
+            ->get();
 
         $datatables = datatables()
             ->of($kategoriPoint)

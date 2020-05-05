@@ -29,12 +29,7 @@ class HariEfektifController extends Controller
     {
         $newStatus = ($data->status) ? 0 : 1;
 
-        $isSuccess = $data->update([
-            "status" => $newStatus,
-            "updated_at" => now()
-        ]);
-
-        if($isSuccess){
+        if($data->update([ 'status' => $newStatus ]) ){
             $json = [
                 "success" => true,
                 "message" => "Data berhasil diubah"
@@ -59,16 +54,16 @@ class HariEfektifController extends Controller
                 $checked = ($data->status) ? "checked" : "";
                 $param = json_encode(["id" => $data->id,"token" => csrf_token()]);
                 $button = "
-                            <div class='onoffswitch'>
-                                <input type='checkbox' name='onoffswitch' class='onoffswitch-checkbox' id='myonoffswitch$data->id' $checked>
-                                <label class='onoffswitch-label' for='myonoffswitch$data->id' 
-                                onClick='event.preventDefault;
-                                        update($param)'>
-                                    <span class='onoffswitch-inner'></span>
-                                    <span class='onoffswitch-switch'></span>
-                                </label>
-                            </div>
-                            ";
+                        <div class='onoffswitch'>
+                            <input type='checkbox' name='onoffswitch' class='onoffswitch-checkbox' id='myonoffswitch$data->id' $checked>
+                            <label class='onoffswitch-label' for='myonoffswitch$data->id' 
+                            onClick='event.preventDefault;
+                                    update($param)'>
+                                <span class='onoffswitch-inner'></span>
+                                <span class='onoffswitch-switch'></span>
+                            </label>
+                        </div>";
+                        
                 return $button;
             })
             ->make(true);

@@ -32,7 +32,8 @@
 <div class="col-md-12">
     <div class="card card-success">
         <div class="card-header">
-            <a href="{{ route('kategori-point.show.create',$kategoriPoint) }}" class="btn btn-success mb-1 mr-1">Tambah Point</a>
+            <a href="{{ route('kategori-point.show.create',$kategoriPoint) }}" class="btn btn-success mb-1 mr-1">Tambah
+                Point</a>
         </div>
         <div class="card-body">
             <table id="table-point" class="table table-hover table-stripped table-borderless w-100">
@@ -52,14 +53,14 @@
 
 @push('_js')
 <script>
-$(function () {
-    $(document).ready(function () {
-        $('#table-point').DataTable({
-            processing: true,
-            serverSide: true,
-            responsive: true,
-            ajax: "{{ route('datatables.kategori-point.show.point',$kategoriPoint) }}",
-            columns: [{
+    $(function () {
+        $(document).ready(function () {
+            $('#table-point').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                ajax: "{{ route('datatables.kategori-point.show.point',$kategoriPoint) }}",
+                columns: [{
                         data: 'id',
                         name: 'id'
                     },
@@ -83,25 +84,26 @@ $(function () {
                         data: 'action',
                         name: 'action'
                     },
-            ],
-            drawCallback: function(settings){
-                $('.deleteAlerts').on('click', function(e) {
-                    e.preventDefault();
-                    let form = $(this).parents('form');
-                    Swal.fire({
-                        title: "Apakah anda yakin?",
-                        text: "Data akan dihapus secara permanen dari database setelah proses ini dijalankan.",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Ya!",
-                        cancelButtonText: 'Tidak',
-                    }).then( (result) =>{
-                        if(result.value) $(form).submit();
+                ],
+                drawCallback: function (settings) {
+                    $('.deleteAlerts').on('click', function (e) {
+                        e.preventDefault();
+                        let form = $(this).parents('form');
+                        Swal.fire({
+                            title: "Apakah anda yakin?",
+                            text: "Data akan dihapus secara permanen dari database setelah proses ini dijalankan.",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Ya!",
+                            cancelButtonText: 'Tidak',
+                        }).then((result) => {
+                            if (result.value) $(form).submit();
+                        });
                     });
-                });
-            }
+                }
+            });
         });
     });
-});
+
 </script>
 @endpush

@@ -1,7 +1,7 @@
 @extends('layouts.main')
+
 @push('title','Kategori Point')
 @push('header-title','Daftar Kategori Point')
-
 
 @section('content')
 <div class="col-md-12">

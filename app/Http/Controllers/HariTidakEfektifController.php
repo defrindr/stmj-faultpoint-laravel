@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\HariTidakEfektif;
-use Illuminate\Http\Request;
 use App\Http\Requests\HariTidakEfektifRequest;
+use Illuminate\Http\Request;
 
 class HariTidakEfektifController extends Controller
 {
@@ -44,12 +44,16 @@ class HariTidakEfektifController extends Controller
         // Set to kapital
         $request->request->add(["keterangan" => ucfirst($request->keterangan)]);
 
-        $hariTidakEfektif = new HariTidakEfektif($request->all());
+        $hariTidakEfektif = new HariTidakEfektif( $request->all() );
 
-        if($hariTidakEfektif)
-            return redirect()->route('hari-tidak-efektif.index')->with('success','Hari tidak efektif berhasil ditambahkan.');
+        if($hariTidakEfektif->save())
+            return redirect()
+                ->route('hari-tidak-efektif.index')
+                ->with('success','Hari tidak efektif berhasil ditambahkan.');
         else
-            return redirect()->route('hari-tidak-efektif.index')->with('error','Hari tidak efektif gagal ditambahkan.');
+            return redirect()
+                ->route('hari-tidak-efektif.index')
+                ->with('error','Hari tidak efektif gagal ditambahkan.');
     }
 
     /**
@@ -66,7 +70,7 @@ class HariTidakEfektifController extends Controller
         ];
         
         return view('hari-tidak-efektif.edit',
-            compact('hariTidakEfektif','status'));
+            compact('hariTidakEfektif', 'status'));
     }
 
     /**
@@ -81,11 +85,13 @@ class HariTidakEfektifController extends Controller
         // Set to kapital
         $request->request->add(["keterangan" => ucfirst($request->keterangan)]);
 
-        if($hariTidakEfektif->update($request->all()))
-            return redirect()->route('hari-tidak-efektif.index')
+        if($hariTidakEfektif->update( $request->all() ))
+            return redirect()
+                ->route('hari-tidak-efektif.index')
                 ->with('success','Hari tidak efektif berhasil diubah');
         else
-            return redirect()->route('hari-tidak-efektif.index')
+            return redirect()
+                ->route('hari-tidak-efektif.index')
                 ->with('error','Hari tidak efektif gagal diubah');
     }
 
@@ -98,9 +104,13 @@ class HariTidakEfektifController extends Controller
     public function destroy(HariTidakEfektif $hariTidakEfektif)
     {
         if($hariTidakEfektif->delete())
-            return redirect()->route('hari-tidak-efektif.index')->with('success','Hari tidak efektif berhasil dihapus');
+            return redirect()
+                ->route('hari-tidak-efektif.index')
+                ->with('success', 'Hari tidak efektif berhasil dihapus');
         else
-            return redirect()->route('hari-tidak-efektif.index')->with('error','Hari tidak efektif gagal dihapus');
+            return redirect()
+                ->route('hari-tidak-efektif.index')
+                ->with('error', 'Hari tidak efektif gagal dihapus');
     }
 
     /**
@@ -108,7 +118,9 @@ class HariTidakEfektifController extends Controller
      */
     public function json(){
 
-        $hariTidakEfektif = HariTidakEfektif::orderBy('id','DESC')->select(['id','tanggal','status','keterangan'])->get();
+        $hariTidakEfektif = HariTidakEfektif::orderBy('id','DESC')
+            ->select(['id','tanggal','status','keterangan'])
+            ->get();
 
         $datatables = datatables()
             ->of($hariTidakEfektif)

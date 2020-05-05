@@ -1,10 +1,11 @@
 @extends('layouts.main')
+
 @section('title','Point')
 @section('title','Daftar Point')
-@section('content')
 
+@section('content')
 <div class="col-md-12">
-    <x-alerts :data="$errors"/>
+    <x-alerts :data="$errors" />
     <div class="card card-success">
         <div class="card-header">
             <a href="{{ route('point.create') }}" class="btn btn-success">Tambah</a>
@@ -45,9 +46,7 @@
                 </tbody>
             </table>
         </div>
-
-
-        </div>
     </div>
+</div>
 </div>
 @endsection

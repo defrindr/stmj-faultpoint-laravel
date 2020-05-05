@@ -39,7 +39,7 @@
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success mb-1 mr-1" id="btn-submit">Submit</button>
-                    <a href="{{ route('kategori-point.show',$kategoriPoint) }}"
+                    <a href="{{ route('kategori-point.show', $kategoriPoint) }}"
                         class="btn btn-danger mb-1 mr-1">Kembali</a>
                 </div>
             </form>

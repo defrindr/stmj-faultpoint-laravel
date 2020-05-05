@@ -8,12 +8,12 @@
     <x-alerts :data="$errors" />
     <div class="card card-default">
         <div class="card-body">
-            <form method="post" action="{{ route('kategori-point.show.store',$kategoriPoint) }}" class="form">
+            <form method="post" action="{{ route('kategori-point.show.store', $kategoriPoint) }}" class="form">
                 @csrf
                 <div class="form-group">
                     <label for="kategori_peraturan" class="mt-3">Kategori Peraturan</label>
                     <input type="text" class="form-control" id="kategori_peraturan" name="kategori_peraturan"
-                     value="{{ $kategoriPoint->nama }}" disabled>
+                        value="{{ $kategoriPoint->nama }}" disabled>
                 </div>
                 <div class="form-group">
                     <label for="peraturan" class="mt-3">Peraturan</label>
@@ -27,13 +27,11 @@
                 </div>
                 <div class="form-group">
                     <label for="point" class="mt-3">Point</label>
-                    <input type="number" class="form-control" id="point" placeholder="Masukkan point" name="point"
-                    >
+                    <input type="number" class="form-control" id="point" placeholder="Masukkan point" name="point">
                 </div>
                 <div class="form-group">
                     <label for="sanksi" class="mt-3">Sanksi</label>
-                    <input type="text" class="form-control" id="sanksi" placeholder="Masukkan sanksi" name="sanksi"
-                    >
+                    <input type="text" class="form-control" id="sanksi" placeholder="Masukkan sanksi" name="sanksi">
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success mb-1 mr-1" id="btn-submit">Submit</button>
@@ -47,20 +45,21 @@
 </div>
 @endsection
 @push('_js')
-    <script>
-        $('#btn-submit').on('click',function(e){
-            e.preventDefault();
-            var form = $(this).parents('form');
-            Swal.fire({
-                title: "Apakah anda yakin?",
-                text: "Data akan ditambahkan ke dalam database setelah proses ini dijalankan.",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Ya!",
-                cancelButtonText: 'Tidak',
-            }).then( (result) => {
-                if (result.value) form.submit();
-            });
+<script>
+    $('#btn-submit').on('click', function (e) {
+        e.preventDefault();
+        var form = $(this).parents('form');
+        Swal.fire({
+            title: "Apakah anda yakin?",
+            text: "Data akan ditambahkan ke dalam database setelah proses ini dijalankan.",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya!",
+            cancelButtonText: 'Tidak',
+        }).then((result) => {
+            if (result.value) form.submit();
         });
-    </script>
+    });
+
+</script>
 @endpush

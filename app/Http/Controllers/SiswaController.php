@@ -11,25 +11,13 @@ use Illuminate\Support\Facades\DB;
 class SiswaController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function create(Kelas $kelas)
     {
-        return view('siswa.create',[
-            'kelas' => $kelas
-        ]);
+        return view('siswa.create', compact('kelas'));
     }
 
     /**
@@ -52,23 +40,16 @@ class SiswaController extends Controller
 
             if($siswa->save()){
                 return redirect()
-                    ->route('siswa.show',[
-                        'siswa' => $siswa,
-                        'kelas' => $kelas
-                    ])
+                    ->route('siswa.show',[ $siswa, $kelas])
                     ->with('success','Siswa berhasil ditambahkan');
             }else{
                 return redirect()
-                    ->route('kelas.show',[
-                        'kelas' => $kelas
-                    ])
-                    ->with('error','Siswa gagal ditambahkan');
+                    ->route('kelas.show', $kelas)
+                    ->with('error','Siswa gagal ditambahkan.');
             }
         }catch(\Exception $e){
             return redirect()
-                ->route('kelas.show',[
-                    'kelas' => $kelas
-                ])
+                ->route('kelas.show', $kelas)
                 ->with('error','Siswa gagal ditambahkan.');
         }
     }
@@ -81,10 +62,7 @@ class SiswaController extends Controller
      */
     public function show(Kelas $kelas, Siswa $siswa)
     {
-        return view('siswa.show',[
-            'kelas' => $kelas,
-            'siswa' => $siswa
-        ]);
+        return view('siswa.show', compact('kelas', 'siswa'));
     }
 
     /**
@@ -95,10 +73,7 @@ class SiswaController extends Controller
      */
     public function edit(Kelas $kelas, Siswa $siswa)
     {
-        return view('siswa.edit',[
-            'siswa' => $siswa,
-            'kelas' => $kelas
-        ]);
+        return view('siswa.edit', compact('kelas', 'siswa'));
     }
 
     /**
@@ -110,16 +85,14 @@ class SiswaController extends Controller
      */
     public function update(SiswaRequest $request, Kelas $kelas, Siswa $siswa)
     {
-        if($siswa->update($request->all())){
-            return redirect()->route('siswa.show',[
-                'kelas' => $kelas,
-                'siswa' => $siswa
-            ])->with('success','Siswa berhasil diubah');
+        if($siswa->update( $request->all() )){
+            return redirect()
+                ->route('siswa.show', [$kelas, $siswa] )
+                ->with('success', 'Siswa berhasil diubah.');
         }else{
-            return redirect()->route('siswa.show',[
-                'kelas' => $kelas,
-                'siswa' => $siswa
-            ])->with('error','Siswa gagal diubah');
+            return redirect()
+                ->route('siswa.show', [$kelas, $siswa] )
+                ->with('error', 'Siswa gagal diubah.');
         }
     }
 
@@ -133,12 +106,18 @@ class SiswaController extends Controller
     {
         try{
             if($siswa->delete()){
-                return redirect()->route('kelas.show',['kelas' => $kelas])->with('success','Siswa berhasil dihapus');
+                return redirect()
+                    ->route('kelas.show', $kelas)
+                    ->with('success', 'Siswa berhasil dihapus.');
             }else{
-                return redirect()->route('kelas.show',['kelas' => $kelas])->with('error','Siswa gagal dihapus');
+                return redirect()
+                    ->route('kelas.show', $kelas)
+                    ->with('error', 'Siswa gagal dihapus.');
             }
         }catch(\Exception $e){
-            return redirect()->route('kelas.show',['kelas' => $kelas])->with('error','Siswa gagal dihapus.');
+            return redirect()
+                ->route('kelas.show', $kelas)
+                ->with('error', 'Siswa gagal dihapus.');
         }
     }
 
@@ -150,26 +129,30 @@ class SiswaController extends Controller
         $datatable = datatables()
             ->of($siswa)
             ->addColumn('action',function($data){
-                $routeUpdate = route('siswa.edit',[
-                        'kelas' => $data->kelas_id,
-                        'siswa' => $data,
-                    ]);
-                $routeDetail = route('siswa.show',[
-                        'kelas' => $data->kelas_id,
-                        'siswa' => $data,
-                    ]);
-                $routeDestroy = route('siswa.destroy',[
-                        'kelas' => $data->kelas_id,
-                        'siswa' => $data,
-                    ]);
+                $routeUpdate = route('siswa.edit', [$data->kelas_id, $data] );
+                $routeDetail = route('siswa.show', [$data->kelas_id, $data] );
+                $routeDestroy = route('siswa.destroy', [$data->kelas_id, $data] );
 
                 $token = csrf_token();
                 $csrf = "<input type='hidden' value='$token' name='_token'>";
                 $method = "<input type='hidden' value='DELETE' name='_method'>";
                 
-                $buttonUpdate = "<a href='$routeUpdate' class='btn btn-primary mb-1 mr-1'><i class='fa fa-pencil-alt'></i> Ubah</a>";
-                $buttonDetail = "<a href='$routeDetail' class='btn btn-warning mb-1 mr-1'><i class='fa fa-eye'></i> Detail</a>";
-                $buttonDestroy = "<form action='$routeDestroy' method='post' class='d-inline-block'> $csrf $method <button class='btn btn-danger mb-1 mr-1 deleteAlerts'><i class='fa fa-trash'></i> Hapus</button></form>";
+                $buttonUpdate = "
+                            <a href='$routeUpdate' class='btn btn-primary mb-1 mr-1'>
+                                <i class='fa fa-pencil-alt'></i> Ubah
+                            </a>";
+                $buttonDetail = "
+                            <a href='$routeDetail' class='btn btn-warning mb-1 mr-1'>
+                                <i class='fa fa-eye'></i> Detail
+                            </a>";
+                $buttonDestroy = "
+                            <form action='$routeDestroy' method='post' class='d-inline-block'> 
+                                $csrf 
+                                $method 
+                                <button class='btn btn-danger mb-1 mr-1 deleteAlerts'>
+                                    <i class='fa fa-trash'></i> Hapus
+                                </button>
+                            </form>";
                 
                 $html = "$buttonUpdate $buttonDetail $buttonDestroy";
                 return $html;

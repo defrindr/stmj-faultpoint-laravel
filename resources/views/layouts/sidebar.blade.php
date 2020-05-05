@@ -19,6 +19,11 @@ $sidebar = [
         "icon" => "",
       ],
       [
+        "title" => "Kategori Point",
+        "link" => route('kategori-point.index'),
+        "icon" => "",
+      ],
+      [
         "title" => "Hari Efektif",
         "link" => route('hari-efektif.index'),
         "icon" => "",

@@ -56,7 +56,9 @@ Route::group(['middleware' => 'auth'],function(){
       'show'
     ]);
     //route kategori point
-    Route::resource('kategori-point','KategoriPointController');
+    Route::resource('kategori-point','KategoriPointController')->except([
+      'show'
+    ]);
     //route point
     Route::resource('point','PointController');
 });
@@ -81,4 +83,5 @@ Route::group(["middleware"=> "auth","prefix" => "datatables","as" => "datatables
     Route::get('kelas/{kelas}/siswa/json','SiswaController@json')->name('kelas.show.siswa');
     Route::get('/users/json','UserController@json')->name('user');
     Route::get('/hari-tidak-efektif/json','HariTidakEfektifController@json')->name('hari-tidak-efektif');
+    Route::get('/kategori-point/json','KategoriPointController@json')->name('kategori-point');
 });

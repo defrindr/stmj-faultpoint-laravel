@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\models\KategoriPoint;
+use App\Models\KategoriPoint;
+use App\Http\Requests\KategoriPointRequest;
 use Illuminate\Http\Request;
+
 
 class KategoriPointController extends Controller
 {
@@ -14,9 +16,7 @@ class KategoriPointController extends Controller
      */
     public function index()
     {
-        //
-        $KategoriPoint=KategoriPoint::all();
-        return view('kategori-point.index',['KategoriPoint' => $KategoriPoint]);
+        return view('kategori-point.index');
     }
 
     /**
@@ -26,8 +26,12 @@ class KategoriPointController extends Controller
      */
     public function create()
     {
-        //
-        return view('kategori-point.create');
+        $jenisPoint = [
+            'positif',
+            'negatif'
+        ];
+        
+        return view('kategori-point.create',compact('jenisPoint'));
     }
 
     /**
@@ -36,30 +40,14 @@ class KategoriPointController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(KategoriPointRequest $request)
     {
-        //
-        $request->validate([
-            'nama' => 'required',
-            'jenis_point' => 'required',
-        ]);
-        KategoriPoint::create([
-            'nama'=>$request->nama,
-            'jenis_point'=>$request->jenis_point
-        ]);
-    //     HariTidakEfektif::create($request->all());
-       return redirect('/kategori-point')->with('status','Berhasil Menambahkan Kategori Point');
-    }
+        $kategoriPoint = new KategoriPoint($request->all());
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\KategoriPoint  $kategoriPoint
-     * @return \Illuminate\Http\Response
-     */
-    public function show(KategoriPoint $kategoriPoint)
-    {
-        //
+        if($kategoriPoint->save())
+            return redirect()->route('kategori-point.index')->with('success','Kategori point berhasil ditambahkan');
+        else
+            return redirect()->route('kategori-point.index')->with('error','Kategori point gagal ditambahkan');
     }
 
     /**
@@ -70,8 +58,12 @@ class KategoriPointController extends Controller
      */
     public function edit(KategoriPoint $kategoriPoint)
     {
-        //
-        return view('kategori-point.edit',compact('kategoriPoint'));
+        $jenisPoint = [
+            'positif',
+            'negatif'
+        ];
+
+        return view('kategori-point.edit',compact('kategoriPoint','jenisPoint'));
     }
 
     /**
@@ -81,19 +73,12 @@ class KategoriPointController extends Controller
      * @param  \App\KategoriPoint  $kategoriPoint
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, KategoriPoint $kategoriPoint)
+    public function update(KategoriPointRequest $request, KategoriPoint $kategoriPoint)
     {
-        //
-        $request->validate([
-            'nama' => 'required',
-            'jenis_point' => 'required',
-        ]);
-        kategoriPoint::where('id',$kategoriPoint->id)
-        ->update([
-            'nama'=>$request->nama,
-            'jenis_point'=>$request->jenis_point
-        ]);
-        return redirect('/kategori-point')->with('status','Berhasil Mengubah Data');
+        if($kategoriPoint->update($request->all()))
+            return redirect()->route('kategori-point.index')->with('success','Kategori point berhasil diubah');
+        else
+            return redirect()->route('kategori-point.index')->with('success','Kategori point gagal diubah');
     }
 
     /**
@@ -104,8 +89,47 @@ class KategoriPointController extends Controller
      */
     public function destroy(KategoriPoint $kategoriPoint)
     {
-        //
-        KategoriPoint::destroy($kategoriPoint->id);
-        return redirect('/kategori-point')->with('status','Data Berhasil Dihapus');
+        if($kategoriPoint->delete())
+            return redirect()->route('kategori-point.index')->with('success','Kategori point berhasil dihapus');
+        else
+            return redirect()->route('kategori-point.index')->with('error','Kategori point gagal dihapus');
+    }
+
+    public function json(){
+        $kategoriPoint = KategoriPoint::orderBy('created_at','DESC')->select(['id','nama','jenis_point'])->get();
+
+        $datatables = datatables()
+            ->of($kategoriPoint)
+            ->addColumn('action',function($data){
+                $routeUpdate = route('kategori-point.edit',$data);
+                $routeDestroy = route('kategori-point.destroy',$data);
+
+                $token = csrf_token();
+                $csrf = "<input type='hidden' value='$token' name='_token'>";
+                $method = "<input type='hidden' value='DELETE' name='_method'>";
+                
+                $buttonUpdate = "
+                            <a href='$routeUpdate' class='btn btn-primary mb-1 mr-1'>
+                                    <i class='fa fa-pencil-alt'></i> Ubah</a>";
+                $buttonDestroy = "
+                            <form action='$routeDestroy' method='post' class='d-inline-block'> 
+                                $csrf 
+                                $method 
+                                <button class='btn btn-danger mb-1 mr-1 deleteAlerts'>
+                                    <i class='fa fa-trash'></i> 
+                                    Hapus
+                                </button>
+                            </form>";
+                
+                $html = "$buttonUpdate $buttonDestroy";
+
+                return $html;
+            })
+            ->editColumn('jenis_point',function($data){
+                return $data->getJenisPoint();
+            })
+            ->make(true);
+
+        return $datatables;
     }
 }

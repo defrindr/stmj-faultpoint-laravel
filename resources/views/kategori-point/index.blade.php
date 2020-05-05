@@ -1,50 +1,64 @@
-@extends('layouts.mains')
-@section('title','Absensi')
-@section('container')
+@extends('layouts.main')
+@push('title','Kategori Point')
+@push('header-title','Daftar Kategori Point')
 
-<div class="container">
-<div class="row">
-<div class="col-10">
-    <h1 class="mt-3">Kategori Point</h1>
-    <a href="/kategori-point/create" class="btn btn-primary my-3">Tambah Kategori Point</a>
-    @if (session('status'))
-    <div class="alert alert-success">
-        {{ session('status') }}
+
+@section('content')
+<div class="col-md-12">
+    <x-alerts :data="$errors" />
+    <div class="card card-success">
+        <div class="card-header">
+            <a href="{{ route('kategori-point.create') }}" class="btn btn-success">Tambah</a>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-borderless" id="kategori-point-table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nama</th>
+                        <th scope="col">Jenis Point</th>
+                        <th scope="col">aksi</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
-@endif
-    <table class="table">
-<thead class="thead-dark">
-  <tr>
-  <th scope="col">#</th>
-  <th scope="col">Nama</th>
-  <th scope="col">Jenis Point</th>
-  <th scope="col">aksi</th>
-  </tr>
-    </thead>
-    <tbody>
-    @foreach($KategoriPoint as $efk)
-    <tr>
-    <th scope="row">{{ $loop->iteration }}</th>
-    <td>{{$efk->nama}}</td>
-    <td>{{$efk->jenis_point}}</td>
-    <td>
-    <!-- <a href="{{ url('/kategori-point/'.$efk->id) }}" class="badge badge-success">Detail</a> -->
-    <a href="kategori-point/{{ $efk->id }}/edit" class="btn btn-primary">Edit</a>
-    <form action="kategori-point/{{ $efk->id }}" method="post" class="d-inline">
-    @method('delete')
-    @csrf
-    <button type="submit" class="btn btn-danger">Delete</button>
-    </form>
-    </td>
-    </tr>
-    @endforeach
-    </tbody>
-</table>
-
-
-</div>
-</div>
 </div>
 @endsection
 
-    
+@push('_js')
+<script>
+$(function() {
+    $('#kategori-point-table').DataTable({
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        ajax: '{{ route("datatables.kategori-point") }}',
+        columns: [
+            { data: 'id', name: 'id' },
+            { data: 'nama', name: 'nama' },
+            { data: 'jenis_point', name: 'jenis_point' },
+            { data: 'action', name: 'action' },
+        ],
+        drawCallback: function(settings){
+            $('.deleteAlerts').on('click', function(e) {
+                e.preventDefault();
+                let form = $(this).parents('form');
+                Swal.fire({
+                    title: "Apakah anda yakin?",
+                    text: "Data akan dihapus secara permanen dari database setelah proses ini dijalankan.",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Ya!",
+                    cancelButtonText: 'Tidak',
+                }).then( (result) =>{
+                    if(result.value) $(form).submit();
+                })
+            });
+        }
+    });
+});
+
+</script>
+@endpush
+

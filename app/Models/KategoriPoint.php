@@ -12,7 +12,11 @@ class KategoriPoint extends Model
         "jenis_point",
     ];
 
-    function point() {
+    public function point() {
         return $this->hasMany('App\Models\Point');
+    }
+
+    public function getJenisPoint(){
+        return strtoupper($this->jenis_point);
     }
 }

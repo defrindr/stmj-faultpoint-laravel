@@ -30,4 +30,7 @@ class Siswa extends Model
     function absensi() {
         return $this->hasMany('App\Models\Absensi');
     }
+    function kelas() {
+        return $this->belongsTo(Kelas::class);
+    }
 }

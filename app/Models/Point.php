@@ -14,15 +14,25 @@ class Point extends Model
         "point",
         "sanksi",
     ];
-    public function kategori_point()
-{
-    return $this->belongsTo(kategoriPoint::class);
-}
+
+    public function getIntervalWaktu(){
+        return $this->interval_waktu. " Kali";
+    }
+
+    public function getPoint(){
+        return $this->point. " Point";
+    }
+
+
+    public function kategori_point(){
+        return $this->belongsTo(kategoriPoint::class);
+    }
+
     function kasus() {
         return $this->hasMany('App\Models\Kasus');
     }
+
     function kategoriPoint() {
         return $this->belongsTo('App\Models\KategoriPoint');
     }
 }
-

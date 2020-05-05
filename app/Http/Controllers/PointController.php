@@ -2,35 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\models\Point;
-use App\models\KategoriPoint;
+use App\Models\Point;
+use App\Models\KategoriPoint;
+use App\Http\Requests\PointRequest;
 use Illuminate\Http\Request;
-use DB;
+
 class PointController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-        $Point=Point::all();
-        $KategoriPoint=KategoriPoint::all();
-        return view('point.index',compact('Point','KategoriPoint'));
-    }
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(KategoriPoint $kategoriPoint)
     {
-        //
-        $KategoriPoint=KategoriPoint::all();
-        return view('point.create',compact('KategoriPoint'));
+        return view('kategori-point.point.create',compact('kategoriPoint'));
     }
 
     /**
@@ -39,38 +26,19 @@ class PointController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PointRequest $request,KategoriPoint $kategoriPoint)
     {
-        //
-        $request->validate([
-            'peraturan' => 'required',
-            'interval_waktu' => 'required|numeric',
-            'point' => 'required|numeric',
-            'sanksi' => 'required',
-            'kategori_point_id' => 'required',
-        ]);
-        Point::create([
-            'peraturan'=>$request->peraturan,
-            'interval_waktu'=>$request->interval_waktu,
-            'point'=>$request->point,
-            'sanksi'=>$request->sanksi,
-            'kategori_point_id'=>$request->kategori_point_id
-        ]);
-    //     HariTidakEfektif::create($request->all());
-       return redirect('/point')->with('status','Berhasil Menambahkan Point');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Point  $point
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Point $point)
-    {
-        //
-        $KategoriPoint=KategoriPoint::all();
-        return view('point.show',compact('point','KategoriPoint'));
+        $request->request->add(['kategori_point_id' => $kategoriPoint->id]);
+        $point = new Point($request->all());
+        
+        if($point->save())
+            return redirect()
+                ->route('kategori-point.show',$kategoriPoint)
+                ->with('success','Point berhasil ditambahkan');
+        else
+            return redirect()
+                ->route('kategori-point.show',$kategoriPoint)
+                ->with('error','Point gagal ditambahkan');
     }
 
     /**
@@ -79,11 +47,9 @@ class PointController extends Controller
      * @param  \App\Point  $point
      * @return \Illuminate\Http\Response
      */
-    public function edit(Point $point)
+    public function edit(KategoriPoint $kategoriPoint,Point $point)
     {
-        //
-        $KategoriPoint=KategoriPoint::all();
-        return view('point.edit',compact('point','KategoriPoint'));
+        return view('kategori-point.point.edit',compact('point','kategoriPoint'));
     }
 
     /**
@@ -93,25 +59,16 @@ class PointController extends Controller
      * @param  \App\Point  $point
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Point $point)
+    public function update(PointRequest $request, KategoriPoint $kategoriPoint, Point $point)
     {
-        //
-        $request->validate([
-            'peraturan' => 'required',
-            'interval_waktu' => 'required|numeric',
-            'point' => 'required|numeric',
-            'sanksi' => 'required',
-            'kategori_point_id' => 'required',
-        ]);
-        Point::where('id',$point->id)
-        ->update([
-            'peraturan'=>$request->peraturan,
-            'interval_waktu'=>$request->interval_waktu,
-            'point'=>$request->point,
-            'sanksi'=>$request->sanksi,
-            'kategori_point_id'=>$request->kategori_point_id
-        ]);
-        return redirect('/point')->with('status','Berhasil Mengubah Data');
+        if($point->update($request->all()))
+            return redirect()
+                ->route('kategori-point.show',$kategoriPoint)
+                ->with('success','Point berhasil diubah');
+        else
+            return redirect()
+                ->route('kategori-point.show',$kategoriPoint)
+                ->with('error','Point gagal diubah');
     }
 
     /**
@@ -120,10 +77,61 @@ class PointController extends Controller
      * @param  \App\Point  $point
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Point $point)
+    public function destroy(KategoriPoint $kategoriPoint,Point $point)
     {
-        //
-        Point::destroy($point->id);
-        return redirect('/point')->with('status','Data Berhasil Dihapus');
+        try{
+            $point->delete();
+            return redirect()
+                ->route('kategori-point.show',$kategoriPoint)
+                ->with('success','Point berhasil dihapus.');
+        }catch(\Exception $e){
+            return redirect()
+                ->route('kategori-point.show',$kategoriPoint)
+                ->with('error','Point gagal dihapus. Data ini masih te-relasi.');
+        }
     }
+
+
+
+    public function json(KategoriPoint $kategoriPoint){
+        $point = Point::where(['kategori_point_id' => $kategoriPoint->id])->orderBy('created_at','DESC')->get();
+        $datatables = datatables()
+            ->of($point)
+            ->addColumn('action',function($data){
+                $routeUpdate = route('kategori-point.show.edit',[$data->kategori_point_id,$data->id]);
+                $routeDestroy = route('kategori-point.show.destroy',[$data->kategori_point_id,$data->id]);
+
+                $token = csrf_token();
+                $csrf = "<input type='hidden' value='$token' name='_token'>";
+                $method = "<input type='hidden' value='DELETE' name='_method'>";
+                
+                $buttonUpdate = "
+                            <a href='$routeUpdate' class='btn btn-primary mb-1 mr-1'>
+                                    <i class='fa fa-pencil-alt'></i> Ubah</a>";
+                $buttonDestroy = "
+                            <form action='$routeDestroy' method='post' class='d-inline-block'> 
+                                $csrf 
+                                $method 
+                                <button class='btn btn-danger mb-1 mr-1 deleteAlerts'>
+                                    <i class='fa fa-trash'></i> 
+                                    Hapus
+                                </button>
+                            </form>";
+                
+                $html = "$buttonUpdate $buttonDestroy";
+
+                return $html;
+            })
+            ->editColumn('interval_waktu',function($data){
+                return $data->getIntervalWaktu();
+            })
+            ->editColumn('point',function($data){
+                return $data->getPoint();
+            })
+            ->make(true);
+
+        return $datatables;
+    }
+
+
 }

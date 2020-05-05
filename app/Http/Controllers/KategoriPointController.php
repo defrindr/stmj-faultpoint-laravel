@@ -51,6 +51,17 @@ class KategoriPointController extends Controller
     }
 
     /**
+     * Display specific resource
+     * 
+     * @param \App\Models\KategoriPoint $kategoriPoint
+     * @return \Illuminate\Http\Response
+     */
+    public function show(KategoriPoint $kategoriPoint){
+        return view('kategori-point.show',compact('kategoriPoint'));
+    }
+
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\KategoriPoint  $kategoriPoint
@@ -95,6 +106,10 @@ class KategoriPointController extends Controller
             return redirect()->route('kategori-point.index')->with('error','Kategori point gagal dihapus');
     }
 
+    /**
+     * Display JSON Datatable Data
+     * 
+     */
     public function json(){
         $kategoriPoint = KategoriPoint::orderBy('created_at','DESC')->select(['id','nama','jenis_point'])->get();
 
@@ -102,6 +117,7 @@ class KategoriPointController extends Controller
             ->of($kategoriPoint)
             ->addColumn('action',function($data){
                 $routeUpdate = route('kategori-point.edit',$data);
+                $routeDetail = route('kategori-point.show',$data);
                 $routeDestroy = route('kategori-point.destroy',$data);
 
                 $token = csrf_token();
@@ -111,6 +127,9 @@ class KategoriPointController extends Controller
                 $buttonUpdate = "
                             <a href='$routeUpdate' class='btn btn-primary mb-1 mr-1'>
                                     <i class='fa fa-pencil-alt'></i> Ubah</a>";
+                $buttonDetail = "
+                            <a href='$routeDetail' class='btn btn-warning mb-1 mr-1'>
+                                    <i class='fa fa-eye'></i> Detail</a>";
                 $buttonDestroy = "
                             <form action='$routeDestroy' method='post' class='d-inline-block'> 
                                 $csrf 
@@ -121,7 +140,7 @@ class KategoriPointController extends Controller
                                 </button>
                             </form>";
                 
-                $html = "$buttonUpdate $buttonDestroy";
+                $html = "$buttonUpdate $buttonDetail $buttonDestroy";
 
                 return $html;
             })

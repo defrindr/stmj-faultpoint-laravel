@@ -47,6 +47,7 @@ Route::group(['middleware' => 'auth'],function(){
     ]);
     // route user
     Route::resource('/user','UserController');
+    // route user role
     Route::get('/user/{user}/addrole','UserController@addRole')->name('user.add-role');
     Route::post('/user/{user}/storerole','UserController@storeRole')->name('user.store-role');
     Route::delete('/user/{user}/removerole/{userRole}','UserController@removeRole')->name('user.remove-role');
@@ -56,11 +57,13 @@ Route::group(['middleware' => 'auth'],function(){
       'show'
     ]);
     //route kategori point
-    Route::resource('kategori-point','KategoriPointController')->except([
-      'show'
-    ]);
-    //route point
-    Route::resource('point','PointController');
+    Route::resource('kategori-point','KategoriPointController');
+    // route point
+    Route::get('/kategori-point/{kategori_point}/point','PointController@create')->name('kategori-point.show.create');
+    Route::post('/kategori-point/{kategori_point}/point','PointController@store')->name('kategori-point.show.store');
+    Route::get('/kategori-point/{kategori_point}/point/{point}/edit','PointController@edit')->name('kategori-point.show.edit');
+    Route::patch('/kategori-point/{kategori_point}/point/{point}/update','PointController@update')->name('kategori-point.show.update');
+    Route::delete('/kategori-point/{kategori_point}/point/{point}','PointController@destroy')->name('kategori-point.show.destroy');
 });
 
 
@@ -84,4 +87,5 @@ Route::group(["middleware"=> "auth","prefix" => "datatables","as" => "datatables
     Route::get('/users/json','UserController@json')->name('user');
     Route::get('/hari-tidak-efektif/json','HariTidakEfektifController@json')->name('hari-tidak-efektif');
     Route::get('/kategori-point/json','KategoriPointController@json')->name('kategori-point');
+    Route::get('kategori-point/{kategori_point}/point/json','PointController@json')->name('kategori-point.show.point');
 });

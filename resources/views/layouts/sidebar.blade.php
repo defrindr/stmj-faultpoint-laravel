@@ -34,7 +34,12 @@ $sidebar = [
     "title" => "Kelas",
     "link" => route('kelas.index'),
     "icon" => "fas fa-users",
-  ]
+  ],
+  [
+    "title" => "User",
+    "link" => route('user.index'),
+    "icon" => "fas fa-user",
+  ],
 ];
 
 ?>

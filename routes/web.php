@@ -45,7 +45,12 @@ Route::group(['middleware' => 'auth'],function(){
     Route::resource('/kelas/{kelas}/siswa','SiswaController')->except([
       'index'
     ]);
-    
+    // route user
+    Route::resource('/user','UserController');
+    Route::get('/user/{user}/addrole','UserController@addRole')->name('user.add-role');
+    Route::post('/user/{user}/storerole','UserController@storeRole')->name('user.store-role');
+    Route::delete('/user/{user}/removerole/{userRole}','UserController@removeRole')->name('user.remove-role');
+    Route::post('/user/{user}/reset-password','UserController@resetPassword')->name('user.reset-password');
 });
 
 
@@ -66,4 +71,5 @@ Route::group(["middleware"=> "auth","prefix" => "datatables","as" => "datatables
     Route::get("jurusan/json","JurusanController@json")->name("jurusan");
     Route::get("kelas/json","KelasController@json")->name("kelas");
     Route::get('kelas/{kelas}/siswa/json','SiswaController@json')->name('kelas.show.siswa');
+    Route::get('/users/json','UserController@json')->name('user');
 });

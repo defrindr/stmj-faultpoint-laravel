@@ -52,7 +52,9 @@ Route::group(['middleware' => 'auth'],function(){
     Route::delete('/user/{user}/removerole/{userRole}','UserController@removeRole')->name('user.remove-role');
     Route::post('/user/{user}/reset-password','UserController@resetPassword')->name('user.reset-password');
     //route hari tidak efektif
-    Route::resource('hari-tidak-efektif','HariTidakEfektifController');
+    Route::resource('hari-tidak-efektif','HariTidakEfektifController')->except([
+      'show'
+    ]);
     //route kategori point
     Route::resource('kategori-point','KategoriPointController');
     //route point
@@ -78,4 +80,5 @@ Route::group(["middleware"=> "auth","prefix" => "datatables","as" => "datatables
     Route::get("kelas/json","KelasController@json")->name("kelas");
     Route::get('kelas/{kelas}/siswa/json','SiswaController@json')->name('kelas.show.siswa');
     Route::get('/users/json','UserController@json')->name('user');
+    Route::get('/hari-tidak-efektif/json','HariTidakEfektifController@json')->name('hari-tidak-efektif');
 });

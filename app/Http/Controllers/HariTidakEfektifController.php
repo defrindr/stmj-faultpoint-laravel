@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\HariTidakEfektif;
 use Illuminate\Http\Request;
+use App\Http\Requests\HariTidakEfektifRequest;
 
 class HariTidakEfektifController extends Controller
 {
@@ -14,9 +15,7 @@ class HariTidakEfektifController extends Controller
      */
     public function index()
     {
-        //
-        $HariTidakEfektif=HariTidakEfektif::all();
-        return view('hari-tidak-efektif.index',['HariTidakEfektif' => $HariTidakEfektif]);
+        return view('hari-tidak-efektif.index');
     }
 
     /**
@@ -26,8 +25,12 @@ class HariTidakEfektifController extends Controller
      */
     public function create()
     {
-        //
-        return view('hari-tidak-efektif.create');
+        $status = [
+            "0" => "Hari Libur Nasional",
+            "1" => "Hari Libur Optional",
+        ];
+
+        return view('hari-tidak-efektif.create',compact('status'));
     }
 
     /**
@@ -36,39 +39,17 @@ class HariTidakEfektifController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(HariTidakEfektifRequest $request)
     {
-        //
-        // $hari=new hariTidakEfektif;
-        // $hari->tanggal=$request->tanggal;
-        // $hari->status=1;
-        // $hari->keterangan=$request->keterangan;
-        // $hari->save();
-        $request->validate([
-            'tanggal' => 'required',
-            'keterangan' => 'required',
-        ]);
-        HariTidakEfektif::create([
-            'tanggal'=>$request->tanggal,
-            'status'=>1,
-            'keterangan'=>$request->keterangan
-        ]);
-    //     HariTidakEfektif::create($request->all());
-       return redirect('/hari-tidak-efektif')->with('status','Berhasil Menambahkan Hari Tidak Efektif');
-    // return $request;
-    }
+        // Set to kapital
+        $request->request->add(["keterangan" => ucfirst($request->keterangan)]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\HariTidakEfektif  $hariTidakEfektif
-     * @return \Illuminate\Http\Response
-     */
-    public function show(HariTidakEfektif $hariTidakEfektif)
-    {
-        //
-       // return $hariTidakEfektif;
-         return view('hari-tidak-efektif.show',compact('hariTidakEfektif'));
+        $hariTidakEfektif = new HariTidakEfektif($request->all());
+
+        if($hariTidakEfektif)
+            return redirect()->route('hari-tidak-efektif.index')->with('success','Hari tidak efektif berhasil ditambahkan.');
+        else
+            return redirect()->route('hari-tidak-efektif.index')->with('error','Hari tidak efektif gagal ditambahkan.');
     }
 
     /**
@@ -79,8 +60,13 @@ class HariTidakEfektifController extends Controller
      */
     public function edit(HariTidakEfektif $hariTidakEfektif)
     {
-        //
-        return view('hari-tidak-efektif.edit',compact('hariTidakEfektif'));
+        $status = [
+            "0" => "Hari Libur Nasional",
+            "1" => "Hari Libur Optional",
+        ];
+        
+        return view('hari-tidak-efektif.edit',
+            compact('hariTidakEfektif','status'));
     }
 
     /**
@@ -90,20 +76,17 @@ class HariTidakEfektifController extends Controller
      * @param  \App\HariTidakEfektif  $hariTidakEfektif
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, HariTidakEfektif $hariTidakEfektif)
+    public function update(HariTidakEfektifRequest $request, HariTidakEfektif $hariTidakEfektif)
     {
-        //
-        //return $request;
-        $request->validate([
-            'tanggal' => 'required',
-            'keterangan' => 'required',
-        ]);
-        hariTidakEfektif::where('id',$hariTidakEfektif->id)
-        ->update([
-                'tanggal'=>$request->tanggal,
-                'keterangan'=>$request->keterangan
-        ]);
-        return redirect('/hari-tidak-efektif')->with('status','Data Berhasil Diubah');
+        // Set to kapital
+        $request->request->add(["keterangan" => ucfirst($request->keterangan)]);
+
+        if($hariTidakEfektif->update($request->all()))
+            return redirect()->route('hari-tidak-efektif.index')
+                ->with('success','Hari tidak efektif berhasil diubah');
+        else
+            return redirect()->route('hari-tidak-efektif.index')
+                ->with('error','Hari tidak efektif gagal diubah');
     }
 
     /**
@@ -114,8 +97,57 @@ class HariTidakEfektifController extends Controller
      */
     public function destroy(HariTidakEfektif $hariTidakEfektif)
     {
-        //
-        HariTidakEfektif::destroy($hariTidakEfektif->id);
-        return redirect('/hari-tidak-efektif')->with('status','Data Berhasil Dihapus');
+        if($hariTidakEfektif->delete())
+            return redirect()->route('hari-tidak-efektif.index')->with('success','Hari tidak efektif berhasil dihapus');
+        else
+            return redirect()->route('hari-tidak-efektif.index')->with('error','Hari tidak efektif gagal dihapus');
+    }
+
+    /**
+     * Display JSON of Hari tidak efektif
+     */
+    public function json(){
+
+        $hariTidakEfektif = HariTidakEfektif::orderBy('id','DESC')->select(['id','tanggal','status','keterangan'])->get();
+
+        $datatables = datatables()
+            ->of($hariTidakEfektif)
+            ->addColumn('action',function($data){
+                $routeUpdate = route('hari-tidak-efektif.edit',[
+                        'hari_tidak_efektif' => $data->id,
+                    ]);
+                $routeDestroy = route('hari-tidak-efektif.destroy',[
+                        'hari_tidak_efektif' => $data->id,
+                    ]);
+
+                $token = csrf_token();
+                $csrf = "<input type='hidden' value='$token' name='_token'>";
+                $method = "<input type='hidden' value='DELETE' name='_method'>";
+                
+                $buttonUpdate = "
+                            <a href='$routeUpdate' class='btn btn-primary mb-1 mr-1'>
+                                    <i class='fa fa-pencil-alt'></i> Ubah</a>";
+                $buttonDestroy = "
+                            <form action='$routeDestroy' method='post' class='d-inline-block'> 
+                                $csrf 
+                                $method 
+                                <button class='btn btn-danger mb-1 mr-1 deleteAlerts'>
+                                    <i class='fa fa-trash'></i> 
+                                    Hapus
+                                </button>
+                            </form>";
+                
+                $html = "$buttonUpdate $buttonDestroy";
+
+                return $html;
+            })
+            ->editColumn('tanggal',function($data){
+                return \CStr::date($data->tanggal);
+            })
+            ->editColumn('status',function($data){
+                return $data->getStatus();
+            })
+            ->make(true);
+        return $datatables;
     }
 }

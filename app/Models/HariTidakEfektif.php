@@ -12,4 +12,11 @@ class HariTidakEfektif extends Model
         "status",
         "keterangan",
     ];
+
+    public function getStatus(){
+        if($this->status == 1)
+            return "Hari Libur Optional";
+        else
+            return "Hari Libur Nasional";
+    }
 }

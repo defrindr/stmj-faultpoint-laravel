@@ -1,49 +1,70 @@
-@extends('layouts.mains')
-@section('title','Absensi')
-@section('container')
+@extends('layouts.main')
+@push('title','Daftar Hari Tidak Efektif')
+@push('header-title','Hari Tidak Efektif')
 
-<div class="container">
-<div class="row">
-<div class="col-10">
-    <h1 class="mt-3">Hari Tidak Efektif</h1>
-    <a href="/hari-tidak-efektif/create" class="btn btn-primary my-3">Tambah Hari Tidak efektif</a>
-    @if (session('status'))
-    <div class="alert alert-success">
-        {{ session('status') }}
+@section('content')
+<div class="col-12">
+    <x-alerts :data="$errors" />
+    <div class="card card-success">
+        <div class="card-header">
+            <a href="{{ route('hari-tidak-efektif.create') }}" class="btn btn-success">Tambah</a>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-borderless" id="hari-tidak-efektif-table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tanggal</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Keterangan</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
-@endif
-    <table class="table">
-<thead class="thead-dark">
-  <tr>
-  <th scope="col">#</th>
-  <th scope="col">Tanggal</th>
-  <th scope="col">Status</th>
-  <th scope="col">Keterangan</th>
-  <th scope="col">Tanggal Dibuat</th>
-  <th scope="col">aksi</th>
-  </tr>
-    </thead>
-    <tbody>
-    @foreach($HariTidakEfektif as $efk)
-    <tr>
-    <th scope="row">{{ $loop->iteration }}</th>
-    <td>{{$efk->tanggal}}</td>
-    <td>{{$efk->status}}</td>
-    <td>{{$efk->keterangan}}</td>
-    <td>{{$efk->created_at}}</td>
-    <td>
-    <a href="{{ url('/hari-tidak-efektif/'.$efk->id) }}" class="badge badge-success">Detail</a>
-    
-    </td>
-    </tr>
-    @endforeach
-    </tbody>
-</table>
-
-
 </div>
-</div>
-</div>
-@endsection
+@stop
 
-    
+@push('_js')
+<script>
+
+                        // <th scope="col">Tanggal</th>
+                        // <th scope="col">Status</th>
+                        // <th scope="col">Keterangan</th>
+                        // <th scope="col">Tanggal Dibuat</th>
+                        // <th scope="col">aksi</th>
+$(function() {
+    $('#hari-tidak-efektif-table').DataTable({
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        ajax: '{{ route("datatables.hari-tidak-efektif") }}',
+        columns: [
+            { data: 'id', name: 'id' },
+            { data: 'tanggal', name: 'tanggal' },
+            { data: 'status', name: 'status' },
+            { data: 'keterangan', name: 'keterangan' },
+            { data: 'action', name: 'action' },
+        ],
+        drawCallback: function(settings){
+            $('.deleteAlerts').on('click', function(e) {
+                e.preventDefault();
+                let form = $(this).parents('form');
+                Swal.fire({
+                    title: "Apakah anda yakin?",
+                    text: "Data akan dihapus secara permanen dari database setelah proses ini dijalankan.",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Ya!",
+                    cancelButtonText: 'Tidak',
+                }).then( (result) =>{
+                    if(result.value) $(form).submit();
+                })
+            });
+        }
+    });
+});
+
+</script>
+@endpush

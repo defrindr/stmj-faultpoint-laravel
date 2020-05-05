@@ -25,7 +25,7 @@ $sidebar = [
       ],
       [
         "title" => "Hari Tidak Efektif",
-        "link" => "#",
+        "link" => route('hari-tidak-efektif.index'),
         "icon" => "",
       ],
     ]

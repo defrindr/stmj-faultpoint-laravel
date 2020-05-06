@@ -50,15 +50,34 @@
 </div>
 <div class="col-md-6">
     <div class="card card-primary">
-        <div class="card-body">
+        <div class="card-header">
             <h3>Riwayat Penghargaan : <strong>{{ $siswa->point_penghargaan }}</strong> Point</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-borderless w-100" id="table-penghargaan">
+                <thead>
+                    <th>Tanggal</th>
+                    <th>Kasus</th>
+                    <th>Petugas</th>
+                </thead>
+            </table>
         </div>
     </div>
 </div>
 <div class="col-md-6">
     <div class="card card-primary">
-        <div class="card-body">
+        <div class="card-header">
             <h3>Riwayat Pelanggaran : <strong>{{ $siswa->point_pelanggaran }}</strong> Point</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-borderless w-100" id="table-pelanggaran">
+                <thead>
+                    <th>Tanggal</th>
+                    <th>Kasus</th>
+                    <th>Petugas</th>
+                </thead>
+            </table>
+
         </div>
     </div>
 </div>
@@ -66,6 +85,46 @@
 
 @push('_js')
 <script>
+    $(function () {
+        $('#table-penghargaan').DataTable({
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            ajax: "{{ route('datatables.kelas.show.siswa.penghargaan', [$kelas, $siswa] ) }}",
+            columns: [{
+                    data: 'tanggal',
+                    name: 'tanggal'
+                },
+                {
+                    data: 'peraturan',
+                    name: 'peraturan'
+                },
+                {
+                    data: 'petugas',
+                    name: 'petugas'
+                },
+            ],
+        });
+        $('#table-pelanggaran').DataTable({
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            ajax: "{{ route('datatables.kelas.show.siswa.pelanggaran', [$kelas, $siswa] ) }}",
+            columns: [{
+                    data: 'tanggal',
+                    name: 'tanggal'
+                },
+                {
+                    data: 'peraturan',
+                    name: 'peraturan'
+                },
+                {
+                    data: 'petugas',
+                    name: 'petugas'
+                },
+            ],
+        });
+    });
 
 </script>
 @endpush

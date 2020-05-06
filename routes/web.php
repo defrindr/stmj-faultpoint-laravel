@@ -88,6 +88,8 @@ Route::group(["middleware"=> "auth","prefix" => "datatables","as" => "datatables
     Route::get("jurusan/json","JurusanController@json")->name("jurusan");
     Route::get("kelas/json","KelasController@json")->name("kelas");
     Route::get('kelas/{kelas}/siswa/json','SiswaController@json')->name('kelas.show.siswa');
+    Route::get('/kelas/{kelas}/siswa/{siswa}/pelanggaran/json','SiswaController@getPelanggaran')->name('kelas.show.siswa.pelanggaran');
+    Route::get('/kelas/{kelas}/siswa/{siswa}/penghargaan/json','SiswaController@getPenghargaan')->name('kelas.show.siswa.penghargaan');
     Route::get('/users/json','UserController@json')->name('user');
     Route::get('/hari-tidak-efektif/json','HariTidakEfektifController@json')->name('hari-tidak-efektif');
     Route::get('/kategori-point/json','KategoriPointController@json')->name('kategori-point');

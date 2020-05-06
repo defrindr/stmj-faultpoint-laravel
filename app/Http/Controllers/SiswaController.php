@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Siswa;
 use App\Models\Kelas;
+use App\Models\Kasus;
 use App\Http\Requests\SiswaRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -161,5 +162,48 @@ class SiswaController extends Controller
 
         return $datatable;
 
+    }
+
+    public function getPelanggaran(Kelas $kelas,Siswa $siswa){
+        $kasus = Kasus::join('point', 'point.id', 'point_id')
+            ->join('kategori_point', 'kategori_point.id', 'point.kategori_point_id')
+            ->join('siswa', 'siswa.nip', 'siswa_nip')
+            ->join('users', 'users.id', 'user_id')
+            ->where( ['kategori_point.jenis_point' => 'negatif'] )
+            ->select( ['tanggal', 'point.peraturan', 'users.name'] )
+            ->get();
+
+        $datatables = datatables()
+            ->of($kasus)
+            ->addColumn('petugas', function($data){
+                return $data->name;
+            })
+            ->editColumn('tanggal', function($data){
+                return \CStr::date($data->tanggal);
+            })
+            ->make(true);
+
+        return $datatables;
+    }
+    public function getPenghargaan(Kelas $kelas,Siswa $siswa){
+        $kasus = Kasus::join('point', 'point.id', 'point_id')
+            ->join('kategori_point', 'kategori_point.id', 'point.kategori_point_id')
+            ->join('siswa', 'siswa.nip', 'siswa_nip')
+            ->join('users', 'users.id', 'user_id')
+            ->where( ['kategori_point.jenis_point' => 'positif'] )
+            ->select( ['tanggal', 'point.peraturan', 'users.name'] )
+            ->get();
+
+        $datatables = datatables()
+            ->of($kasus)
+            ->addColumn('petugas', function($data){
+                return $data->name;
+            })
+            ->editColumn('tanggal', function($data){
+                return \CStr::date($data->tanggal);
+            })
+            ->make(true);
+
+        return $datatables;
     }
 }

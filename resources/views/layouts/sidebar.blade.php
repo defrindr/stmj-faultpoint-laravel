@@ -44,6 +44,11 @@ $sidebar = [
     "link" => route('user.index'),
     "icon" => "fas fa-user",
   ],
+  [
+    "title" => "Kasus",
+    "link" => route('kasus.index'),
+    "icon" => "far fa-file-alt",
+  ],
 ];
 @endphp
 

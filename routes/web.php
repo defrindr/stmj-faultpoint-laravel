@@ -63,6 +63,10 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('/kategori-point/{kategori_point}/point/{point}/edit','PointController@edit')->name('kategori-point.show.edit');
     Route::patch('/kategori-point/{kategori_point}/point/{point}/update','PointController@update')->name('kategori-point.show.update');
     Route::delete('/kategori-point/{kategori_point}/point/{point}','PointController@destroy')->name('kategori-point.show.destroy');
+    // route kasus
+    Route::resource('/kasus','KasusController');
+    Route::post('kasus/get_siswa/{siswa}', 'KasusController@getSiswa');
+    Route::post('kasus/get_point/{point}', 'KasusController@getPoint');
 });
 
 
@@ -78,6 +82,7 @@ Route::group(['middleware' => 'auth'],function(){
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::group(["middleware"=> "auth","prefix" => "datatables","as" => "datatables."],function(){
     Route::get("hari-efektif/json","HariEfektifController@json")->name("hari-efektif");
     Route::get("jurusan/json","JurusanController@json")->name("jurusan");
@@ -87,4 +92,24 @@ Route::group(["middleware"=> "auth","prefix" => "datatables","as" => "datatables
     Route::get('/hari-tidak-efektif/json','HariTidakEfektifController@json')->name('hari-tidak-efektif');
     Route::get('/kategori-point/json','KategoriPointController@json')->name('kategori-point');
     Route::get('kategori-point/{kategori_point}/point/json','PointController@json')->name('kategori-point.show.point');
+    Route::get('/kasus/json','KasusController@json')->name('kasus');
+});
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes Data Tables
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::group(['middleware' => 'auth', 'prefix' => 'select2', 'as' => 'select2.'],function(){
+    Route::post('/kasus/kelas/{kelas}/siswa','KasusController@siswa')->name('kasus.siswa');
+    Route::post('/kasus/{kategori_point}/point','KasusController@point')->name('kasus.point');
 });

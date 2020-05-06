@@ -25,7 +25,7 @@ class Point extends Model
 
 
     public function kategori_point(){
-        return $this->belongsTo(kategoriPoint::class);
+        return $this->belongsTo(KategoriPoint::class);
     }
 
     function kasus() {

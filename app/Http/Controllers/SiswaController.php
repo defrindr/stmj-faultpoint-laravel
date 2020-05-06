@@ -168,9 +168,8 @@ class SiswaController extends Controller
         $kasus = Kasus::join('point', 'point.id', 'point_id')
             ->join('kategori_point', 'kategori_point.id', 'point.kategori_point_id')
             ->join('siswa', 'siswa.nip', 'siswa_nip')
-            ->join('users', 'users.id', 'user_id')
             ->where( ['kategori_point.jenis_point' => 'negatif'] )
-            ->select( ['tanggal', 'point.peraturan', 'users.name'] )
+            ->select( ['tanggal', 'point.peraturan', 'point.point'] )
             ->get();
 
         $datatables = datatables()
@@ -189,9 +188,8 @@ class SiswaController extends Controller
         $kasus = Kasus::join('point', 'point.id', 'point_id')
             ->join('kategori_point', 'kategori_point.id', 'point.kategori_point_id')
             ->join('siswa', 'siswa.nip', 'siswa_nip')
-            ->join('users', 'users.id', 'user_id')
             ->where( ['kategori_point.jenis_point' => 'positif'] )
-            ->select( ['tanggal', 'point.peraturan', 'users.name'] )
+            ->select( ['tanggal', 'point.peraturan', 'point.point'] )
             ->get();
 
         $datatables = datatables()

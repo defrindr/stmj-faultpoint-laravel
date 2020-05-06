@@ -58,7 +58,7 @@
                 <thead>
                     <th>Tanggal</th>
                     <th>Kasus</th>
-                    <th>Petugas</th>
+                    <th>Point</th>
                 </thead>
             </table>
         </div>
@@ -74,7 +74,7 @@
                 <thead>
                     <th>Tanggal</th>
                     <th>Kasus</th>
-                    <th>Petugas</th>
+                    <th>Point</th>
                 </thead>
             </table>
 
@@ -100,8 +100,8 @@
                     name: 'peraturan'
                 },
                 {
-                    data: 'petugas',
-                    name: 'petugas'
+                    data: 'point',
+                    name: 'point'
                 },
             ],
         });
@@ -119,8 +119,8 @@
                     name: 'peraturan'
                 },
                 {
-                    data: 'petugas',
-                    name: 'petugas'
+                    data: 'point',
+                    name: 'point'
                 },
             ],
         });

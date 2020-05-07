@@ -17,6 +17,7 @@
                     <th>Tanggal</th>
                     <th>Nama Siswa</th>
                     <th>Kelas</th>
+                    <th>Kategori Kasus</th>
                     <th>Kasus</th>
                     <th>Action</th>
                 </thead>
@@ -49,6 +50,10 @@
                 {
                     data: 'kelas',
                     name: 'kelas'
+                },
+                {
+                    data: 'kategori_kasus',
+                    name: 'kategori_kasus'
                 },
                 {
                     data: 'kasus',

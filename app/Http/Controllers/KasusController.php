@@ -197,12 +197,22 @@ class KasusController extends Controller
             ->addColumn('nama_siswa',function($data){
                 return $data->siswa->nama;
             })
+            ->addColumn('kategori_kasus',function($data){
+                return $data->point->kategoriPoint->nama. " (". $data->point->kategoriPoint->jenis_point. ")";
+            })
             ->addColumn('kelas',function($data){
                 return $data->siswa->kelas->getPrefix();
             })
             ->addColumn('kasus',function($data){
                 return $data->point->peraturan;
             })
+            ->removeColumn([
+                'user_id',
+                'siswa_nip',
+                'point_id',
+                'created_at',
+                'updated_at'
+            ])
             ->make(true);
 
         return $datatables;

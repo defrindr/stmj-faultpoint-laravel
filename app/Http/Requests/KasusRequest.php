@@ -25,7 +25,7 @@ class KasusRequest extends FormRequest
     public function rules(Request $request)
     {
         $rules = [
-            "tanggal" => "required|date",
+            "tanggal" => "required|date|before_or_equal:". date('Y-m-d'),
         ];
 
         if($request->isMethod('POST')){

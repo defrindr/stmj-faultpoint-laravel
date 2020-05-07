@@ -45,7 +45,7 @@
                         </div>
                         <div class="form-group">
                             <label for="tanggal">Tanggal</label>
-                            <input type="date" name="tanggal" id="tanggal" class="form-control">
+                            <input type="date" name="tanggal" id="tanggal" class="form-control" max="{{ $today }}">
                         </div>
                         <div class="form-group">
                             <button class="btn btn-success mb-1 mr-1" id="btn-submit">Submit</button>
@@ -231,6 +231,22 @@
                 })
 
             }
+        });
+
+
+        $('#btn-submit').on('click', function (e) {
+            e.preventDefault();
+            var form = $(this).parents('form');
+            Swal.fire({
+                title: "Apakah anda yakin?",
+                text: "Data akan ditambahkan ke dalam database setelah proses ini dijalankan.",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Ya!",
+                cancelButtonText: 'Tidak',
+            }).then((result) => {
+                if (result.value) form.submit();
+            });
         });
 
     });

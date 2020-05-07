@@ -33,6 +33,7 @@ class KasusController extends Controller
         $kelasDB = Kelas::get();
         $kategoriPointDB = KategoriPoint::orderBy('jenis_point','DESC')
             ->get();
+        $today = date('Y-m-d');
 
         $kelas = [];
         $kategoriPoint = [];
@@ -44,7 +45,7 @@ class KasusController extends Controller
             $kategoriPoint += [ $row->id => $row->nama. " ($row->jenis_point)" ];
         }
 
-        return view('kasus.create', compact('kelas', 'kategoriPoint'));
+        return view('kasus.create', compact('kelas', 'kategoriPoint', 'today'));
     }
 
     /**
@@ -112,7 +113,8 @@ class KasusController extends Controller
      */
     public function edit(Kasus $kasus)
     {
-        return view('kasus.edit', compact('kasus'));
+        $today = date('Y-m-d');
+        return view('kasus.edit', compact('kasus', 'today'));
     }
 
     /**
@@ -142,7 +144,17 @@ class KasusController extends Controller
      */
     public function destroy(Kasus $kasus)
     {
-        //
+        try{
+            $kasus->delete();
+
+            return redirect()
+                ->route('kasus.index')
+                ->with('success', 'kasus berhasil dihapus.');
+        }catch(\Exception $e){
+            return redirect()
+                ->route('kasus.index')
+                ->with('success', 'kasus gagal dihapus.');
+        }
     }
 
     /**

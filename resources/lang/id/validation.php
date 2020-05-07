@@ -15,14 +15,14 @@ return [
 
     'accepted' => 'Kolom :attribute harus di setujui.',
     'active_url' => 'Kolom :attribute bukan sebuah URL yang valid.',
-    'after' => 'Kolom :attribute harus berupa tanggal after :date.',
-    'after_or_equal' => 'Kolom :attribute harus berupa tanggal after sama dengan :date.',
+    'after' => 'Kolom :attribute harus berupa tanggal setelah :date.',
+    'after_or_equal' => 'Kolom :attribute harus berupa tanggal setelah atau sama dengan :date.',
     'alpha' => 'Kolom :attribute hanya boleh memuat huruf.',
     'alpha_dash' => 'Kolom :attribute hanya boleh memuat huruf, angka, strip dan garis bawah.',
-    'alpha_num' => 'Kolom :attribute hanya boleh memuat huruf dan numbers.',
+    'alpha_num' => 'Kolom :attribute hanya boleh memuat huruf dan angka.',
     'array' => 'Kolom :attribute harus berupa sebuah array.',
     'before' => 'Kolom :attribute harus berupa tanggal sebelum :date.',
-    'before_or_equal' => 'Kolom :attribute harus berupa tanggal sebelum sama dengan :date.',
+    'before_or_equal' => 'Kolom :attribute harus berupa tanggal sebelum atau sama dengan :date.',
     'between' => [
         'numeric' => 'Kolom :attribute harus di antara :min dan :max.',
         'file' => 'Kolom :attribute harus di antara :min dan :max KB.',

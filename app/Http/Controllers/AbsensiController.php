@@ -153,17 +153,6 @@ class AbsensiController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Absensi  $absensi
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Absensi $absensi)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Absensi  $absensi
@@ -262,11 +251,6 @@ class AbsensiController extends Controller
 
         $today = date('Y-m-d');
 
-        // SELECT tanggal,kelas_id FROM `absensi`
-        // JOIN siswa on siswa_nip = siswa.nip 
-        // JOIN `kelas` on kelas.id = siswa.kelas_id 
-        // JOIN `jurusan` on jurusan.id = jurusan_id
-        // GROUP BY tanggal,kelas_id
         $kelasTelahAbsenHariIni = Absensi::join('siswa', 'siswa.nip', 'siswa_nip')
             ->join('kelas', 'kelas.id', 'kelas_id')
             ->join('jurusan', 'jurusan.id', 'jurusan_id')
@@ -355,6 +339,4 @@ class AbsensiController extends Controller
 
         return $resp;
     }
-
-
 }

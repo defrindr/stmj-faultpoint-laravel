@@ -39,7 +39,9 @@
     <div class="card card-primary">
         <div class="card-header">
             <a href="{{ route('absensi.create', $kelas) }}" class="btn btn-primary mb-1 mr-1">Tambah Absen Hari Ini</a>
-            <a href="{{ route('absensi.edit', $kelas) }}" class="btn btn-primary mb-1 mr-1">Ubah Data</a>
+            @if (Roles::has('Super Admin'))
+                <a href="{{ route('absensi.edit', $kelas) }}" class="btn btn-primary mb-1 mr-1">Ubah Data</a>
+            @endif
             <button class="btn btn-primary mb-1 mr-1" onclick="showAdvSearch()">Advanced Filter</button>
         </div>
         <div class="card-body">

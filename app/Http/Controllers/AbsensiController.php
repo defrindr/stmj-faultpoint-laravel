@@ -169,9 +169,19 @@ class AbsensiController extends Controller
      * @param  \App\Models\Absensi  $absensi
      * @return \Illuminate\Http\Response
      */
-    public function edit(Absensi $absensi)
+    public function edit(Kelas $kelas)
     {
-        //
+        $status = ['alpha', 'ijin', 'sakit', 'bolos', 'hadir'];
+        $siswaDB = Siswa::where( ['kelas_id' => $kelas->id] )
+            ->orderBy('nama','ASC')
+            ->get();
+
+        $siswa = [];
+        foreach($siswaDB as $row){
+            $siswa += [$row->nip => $row->nama];
+        }
+
+        return view('absensi.edit' , compact('kelas', 'status', 'siswa'));
     }
 
     /**
@@ -181,9 +191,30 @@ class AbsensiController extends Controller
      * @param  \App\Models\Absensi  $absensi
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Absensi $absensi)
+    public function update(AbsensiRequest $request,Kelas $kelas)
     {
-        //
+        $absensi = Absensi::where([
+            'id' => $request->id, 
+            'siswa_nip' => $request->siswa_nip
+        ])->first();
+
+        $schema = [
+            "status" => $request->status,
+            "keterangan" => $request->keterangan
+        ];
+
+        try{
+            $absensi->update($schema);
+
+            return redirect()
+                ->route('absensi.show-kelas', $kelas)
+                ->with('success', 'Absensi berhasil diubah');
+        }catch(\Exception $e){
+            return redirect()
+                ->route('absensi.show-kelas', $kelas)
+                ->with('error', 'Absensi gagal diubah');
+        }
+
     }
 
     /**
@@ -200,8 +231,13 @@ class AbsensiController extends Controller
 
 
     public function jsonSiswa(Request $request,Kelas $kelas){
+        $tanggal = date('Y-m-d');
 
-        $data = Absensi::where([ 'tanggal' => Date('Y-m-d'), 'kelas_id' => $kelas->id ])
+        if( $request->tanggal != "" ){
+            $tanggal = $request->tanggal;
+        }
+
+        $data = Absensi::where([ 'tanggal' => $tanggal, 'kelas_id' => $kelas->id ])
             ->where('status','!=','hadir')
             ->join('siswa','siswa.nip','siswa_nip')
             ->join('kelas','kelas.id','kelas_id')
@@ -282,6 +318,42 @@ class AbsensiController extends Controller
 
     public function showKelas(Kelas $kelas){
         return view('absensi.show-kelas', compact('kelas'));
+    }
+
+    public function getDataSiswa(Request $request,Kelas $kelas){
+        
+        $tanggal = $request->tanggal;
+        $nip = $request->nip;
+
+        $absensi = Absensi::join('siswa', 'siswa.nip', 'siswa_nip')
+            ->where([
+                'kelas_id' => $kelas->id, 
+                'tanggal' => $tanggal, 
+                'nip' => $nip
+            ])
+            ->first();
+        
+        $data = [];
+        $success = false;
+        
+        if($absensi){
+            $success = true;
+            $data = [
+                "id" => $absensi->id,
+                "siswa_nip" => $absensi->siswa_nip,
+                "siswa_nama" => $absensi->siswa->nama,
+                "status" => $absensi->status,
+                "keterangan" => $absensi->keterangan,
+            ];
+        }
+
+        $resp = [
+            "success" => $success,
+            "data" => $data,
+            "fetch_on" => date('Y-m-d H:i:s')
+        ];
+
+        return $resp;
     }
 
 

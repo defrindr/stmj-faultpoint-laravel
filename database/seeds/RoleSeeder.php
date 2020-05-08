@@ -17,13 +17,13 @@ class RoleSeeder extends Seeder
                 "nama" => "Super Admin"
             ],
             [
-                "nama" => "Admin Absensi"
+                "nama" => "Petugas Absensi"
             ],
             [
                 "nama" => "Wali Kelas"
             ],
             [
-                "nama" => "Admin Tatib"
+                "nama" => "Petugas Konseling"
             ],
         ];
         foreach($roles as $role){

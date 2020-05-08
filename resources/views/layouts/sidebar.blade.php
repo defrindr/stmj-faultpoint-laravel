@@ -37,21 +37,25 @@ $sidebar = [
   [
     "title" => "Kelas",
     "link" => route('kelas.index'),
+    "role" => "Super Admin|Wali Kelas",
     "icon" => "fas fa-users",
   ],
   [
     "title" => "User",
     "link" => route('user.index'),
+    "role" => "Super Admin",
     "icon" => "fas fa-user",
   ],
   [
     "title" => "Kasus",
     "link" => route('kasus.index'),
+    "role" => "Super Admin|Petugas Konseling",
     "icon" => "far fa-file-alt",
   ],
   [
     "title" => "Absensi",
     "link" => route('absensi.index'),
+    "role" => "Super Admin|Petugas Absensi",
     "icon" => "far fa-bookmark",
   ],
 ];

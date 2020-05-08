@@ -17,22 +17,13 @@ class Role
     {
         $lanjut = false;
         
-    	$hasRoles = explode('-', $hasRoles);
-
-        foreach ($hasRoles as $role) {
-            foreach($roles as $myRole){
-                if (\Auth::check() && \Auth::user()->level->nama_level == $role) {
-                    $lanjut = true;
-                }
-            }
-        }
-
+        if(\Roles::has($hasRoles)) $lanjut = true;
 
     	if($lanjut){
-            \App\Helpers\MyHelper::logging($request);
+        //     \App\Helpers\MyHelper::logging($request);
             return $next($request);
     	}else {
-            return abort(403, 'Izin ditolak.');
+            return abort(403);
         }
     }
 

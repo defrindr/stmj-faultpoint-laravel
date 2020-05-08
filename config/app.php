@@ -238,6 +238,7 @@ return [
         'CStr' => App\Helpers\String\StringHelper::class,
         'ArrayHelper' => App\Helpers\ArrayHelper::class,
         'ArrayHelper' => App\Helpers\ArrayHelper::class,
+        'Roles' => App\Helpers\Auth\RolesValidation::class,
 
         // https://github.com/yajra/laravel-datatables
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,

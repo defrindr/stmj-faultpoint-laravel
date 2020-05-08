@@ -220,10 +220,15 @@ class KelasController extends Controller
         $search = $request->search;
 
         $guru = User::whereIn('id',function($q) {
-            $q->select('user_id')
+            $q->select('user_roles.user_id')
                 ->from('user_roles')
-                ->whereColumn('user_id','users.id')
+                ->whereColumn('user_roles.user_id','users.id')
                 ->join('roles','user_roles.role_id','=','roles.id')
+                ->whereNotIn('user_id',function($q2){
+                    $q2->select('user_roles.user_id')
+                        ->from('user_roles')
+                        ->join('kelas', 'kelas.user_id', 'user_roles.user_id');
+                })
                 ->where(['roles.nama' => 'Wali Kelas']);
         });
 

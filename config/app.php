@@ -13,7 +13,8 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    // Sistem Informasi Absensi & Point
+    'name' => env('APP_NAME', 'SIAP APP'),
 
     /*
     |--------------------------------------------------------------------------

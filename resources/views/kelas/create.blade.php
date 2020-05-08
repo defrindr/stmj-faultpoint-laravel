@@ -71,7 +71,7 @@
     $(document).ready(function () {
         $("#guru").select2({
             ajax: {
-                url: "{{route('kelas.guru')}}",
+                url: "{{route('select2.kelas.guru')}}",
                 type: "post",
                 dataType: 'json',
                 delay: 10,

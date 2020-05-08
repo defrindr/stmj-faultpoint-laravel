@@ -39,7 +39,6 @@ Route::group(['middleware' => 'auth'],function(){
     Route::resource('kelas', 'KelasController')->parameters([
       'kelas' => 'kelas'
     ]);
-    Route::post('kelas/guru/json', 'KelasController@guru')->name('kelas.guru');
     // route siswa
     Route::resource('/kelas/{kelas}/siswa', 'SiswaController')->except([
       'index'
@@ -126,4 +125,5 @@ Route::group(['middleware'=> 'auth', 'prefix' => 'datatables', 'as' => 'datatabl
 Route::group(['middleware' => 'auth', 'prefix' => 'select2', 'as' => 'select2.'],function(){
     Route::post('/kasus/kelas/{kelas}/siswa', 'KasusController@siswa')->name('kasus.siswa');
     Route::post('/kasus/{kategori_point}/point', 'KasusController@point')->name('kasus.point');
+    Route::post('kelas/guru/json', 'KelasController@guru')->name('kelas.guru');
 });

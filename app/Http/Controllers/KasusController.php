@@ -115,7 +115,7 @@ class KasusController extends Controller
     public function edit(Kasus $kasus)
     {
         if( Roles::checkAuthorization($kasus) == false ){
-            return abort(404);
+            return abort(403);
         }
 
         $today = date('Y-m-d');
@@ -151,7 +151,7 @@ class KasusController extends Controller
     {
         try{
             if( Roles::checkAuthorization($kasus) == false ){
-                return abort(404);
+                return abort(403);
             }
             
             $kasus->delete();
@@ -351,9 +351,9 @@ class KasusController extends Controller
     public function rollback(Kasus $kasus){
 
         if( Roles::checkAuthorization($kasus) == false ){
-            return abort(404);
+            return abort(403);
         }
-        
+
         $siswa = Siswa::where( ['nip' => $kasus->siswa_nip] )
             ->first();
         $point = Point::where( ['id' => $kasus->point_id] )

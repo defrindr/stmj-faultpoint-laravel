@@ -175,7 +175,7 @@ class SiswaController extends Controller
                 
 
                 if(\Roles::has('Super Admin')){
-                    $button = "$buttonEdit $buttonDetail $buttonDestroy";
+                    $button = "$buttonUpdate $buttonDetail $buttonDestroy";
                 }else{
                     $button = "$buttonDetail";
                 }

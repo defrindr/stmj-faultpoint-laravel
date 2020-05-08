@@ -10,7 +10,6 @@ use App\Models\Role;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
 use App\Http\Requests\KelasRequest;
-
 use DB;
 
 class KelasController extends Controller
@@ -148,7 +147,7 @@ class KelasController extends Controller
             DB::rollback();
             return redirect()
                 ->route('kelas.index')
-                ->with('error', 'Kelas gagal dihapus. Terdapat anak dari data ini.');
+                ->with('error', 'Kelas gagal dihapus. Masih ada data siswa yang ter-relasi dengan data ini.');
         }
     }
 

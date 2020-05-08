@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Jurusan;
 use Illuminate\Http\Request;
-
 use App\Http\Requests\JurusanRequest;
+use DB;
 
 class JurusanController extends Controller
 {
@@ -90,14 +90,18 @@ class JurusanController extends Controller
      */
     public function destroy(Jurusan $jurusan)
     {
-        if($jurusan->delete()){
+        DB::beginTransaction();
+        try{
+            $jurusan->delete();
+            DB::commit();
             return redirect()
                 ->route('jurusan.index')
                 ->with('success', 'Jurusan berhasil dihapus');
-        }else{
+        }catch(\Exception $e){
+            DB::rollback();
             return redirect()
                 ->route('jurusan.index')
-                ->with('success', 'Jurusan gagal dihapus');
+                ->with('success', 'Jurusan gagal dihapus. Masih ada kelas ter-relasi dengan data ini.');
         }
     }
 

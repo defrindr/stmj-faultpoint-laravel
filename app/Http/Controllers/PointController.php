@@ -6,6 +6,7 @@ use App\Models\Point;
 use App\Models\KategoriPoint;
 use App\Http\Requests\PointRequest;
 use Illuminate\Http\Request;
+use DB;
 
 class PointController extends Controller
 {
@@ -85,16 +86,18 @@ class PointController extends Controller
      */
     public function destroy(KategoriPoint $kategoriPoint,Point $point)
     {
+        DB::beginTransaction();
         try{
             $point->delete();
-
+            DB::commit();
             return redirect()
                 ->route('kategori-point.show', $kategoriPoint)
                 ->with('success', 'Point berhasil dihapus.');
         }catch(\Exception $e){
+            DB::rollback();
             return redirect()
                 ->route('kategori-point.show', $kategoriPoint)
-                ->with('error', 'Point gagal dihapus. Data ini masih te-relasi.');
+                ->with('error', 'Point gagal dihapus. Masih ada data kasus yang ter-relasi dengan data ini.');
         }
     }
 

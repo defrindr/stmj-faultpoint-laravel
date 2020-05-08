@@ -9,7 +9,7 @@ use App\Http\Requests\UserRequest;
 use App\Http\Requests\UserRoleRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
+use DB;
 
 
 class UserController extends Controller
@@ -132,20 +132,18 @@ class UserController extends Controller
                 ->route('user.index')
                 ->with('error', 'Tidak dapat menjalankan aksi ini kepada user yang sedang aktif.');
         }else{
+            DB::beginTransaction();
             try{
-                if($user->delete()){
-                    return redirect()
-                        ->route('user.index')
-                        ->with('success', 'User berhasil dihapus.');
-                }else{
-                    return redirect()
-                        ->route('user.index')
-                        ->with('error', 'User gagal dihapus.');
-                }
-            }catch(\Exception $e){
+                $user->delete();
+                DB::commit();
                 return redirect()
                     ->route('user.index')
-                    ->with('error', "User have relation, can't delete this user.");
+                    ->with('success', 'User berhasil dihapus.');
+            }catch(\Exception $e){
+                DB::rollback();
+                return redirect()
+                    ->route('user.index')
+                    ->with('error', "User gagal dihapus. Masih ada data yang ter-relasi dengan data ini.");
             }
         }
     }

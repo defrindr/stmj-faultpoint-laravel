@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\KategoriPoint;
 use App\Http\Requests\KategoriPointRequest;
 use Illuminate\Http\Request;
+use DB;
 
 
 class KategoriPointController extends Controller
@@ -108,14 +109,19 @@ class KategoriPointController extends Controller
      */
     public function destroy(KategoriPoint $kategoriPoint)
     {
-        if($kategoriPoint->delete())
+        DB::beginTransaction();
+        try{
+            $kategoriPoint->delete();
+            DB::commit();
             return redirect()
                 ->route('kategori-point.index')
                 ->with('success', 'Kategori point berhasil dihapus');
-        else
+        }catch(\Exception $e){
+            DB::rollback();
             return redirect()
                 ->route('kategori-point.index')
-                ->with('error', 'Kategori point gagal dihapus');
+                ->with('error', 'Kategori point gagal dihapus. Masih ada data point yang ter-relasi dengan data ini.');
+        }
     }
 
     /**

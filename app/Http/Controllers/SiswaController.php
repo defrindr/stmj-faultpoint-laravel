@@ -7,7 +7,7 @@ use App\Models\Kelas;
 use App\Models\Kasus;
 use App\Http\Requests\SiswaRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use DB;
 
 class SiswaController extends Controller
 {
@@ -105,20 +105,18 @@ class SiswaController extends Controller
      */
     public function destroy(Kelas $kelas,Siswa $siswa)
     {
+        DB::beginTransaction();
         try{
-            if($siswa->delete()){
-                return redirect()
-                    ->route('kelas.show', $kelas)
-                    ->with('success', 'Siswa berhasil dihapus.');
-            }else{
-                return redirect()
-                    ->route('kelas.show', $kelas)
-                    ->with('error', 'Siswa gagal dihapus.');
-            }
-        }catch(\Exception $e){
+            $siswa->delete();
+            DB::commit();
             return redirect()
                 ->route('kelas.show', $kelas)
-                ->with('error', 'Siswa gagal dihapus.');
+                ->with('success', 'Siswa berhasil dihapus.');
+        }catch(\Exception $e){
+            DB::rollback();
+            return redirect()
+                ->route('kelas.show', $kelas)
+                ->with('error', 'Siswa gagal dihapus. Masih ada data absensi dan/atau kasus yang ter-relasi dengan data ini.');
         }
     }
 

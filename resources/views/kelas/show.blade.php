@@ -4,9 +4,9 @@
 @push('header-title', 'Detail Kelas')
 
 @section('content')
-<div class="col-md-12">
+<div class="col-md-6">
     <x-alerts :data="$errors" />
-    <div class="card card-default">
+    <div class="card card-danger">
         <div class="card-header">
             <a href="{{ route('kelas.index') }}" class="btn btn-danger mb-2 mr-1">Kembali</a>
             @if (Roles::has('Super Admin'))
@@ -35,6 +35,39 @@
         </div>
     </div>
 </div>
+
+<div class="col-md-6">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3>3 Kasus Terakhir</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-borderless table-hover">
+                <thead>
+                    <th>Nama</th>
+                    <th>kasus</th>
+                    <th>Tanggal Kejadian</th>
+                </thead>
+                <tbody>
+                    @if (count($kasus) > 0)
+                    @foreach ($kasus as $item)
+                        <tr>
+                            <td>{{ $item->siswa->nama }}</td>
+                            <td>{{ $item->point->peraturan }}</td>
+                            <td>{{ CStr::date($item->tanggal) }}</td>
+                        </tr>
+                    @endforeach
+                    @else
+                    <tr>
+                        <td colspan="3" class="text-center">Data tidak ditemukan</td>
+                    </tr>
+                    @endif
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 <div class="col-md-12">
     <div class="card card-success">
         <div class="card-header">

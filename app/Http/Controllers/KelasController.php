@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\UserRoles;
 use App\Models\Role;
 use App\Models\Siswa;
+use App\Models\Kasus;
 use Illuminate\Http\Request;
 use App\Http\Requests\KelasRequest;
 use DB;
@@ -88,15 +89,17 @@ class KelasController extends Controller
      */
     public function show(Kelas $kelas)
     {
-        if(Roles::has('Super Admin')){
-            return view('kelas.show', compact('kelas'));
-        }else{
-            $isMatch = $kelas->user_id === Roles::getId();
-            if($isMatch){
-                return view('kelas.show', compact('kelas'));
-            }
+        $kasus = Kasus::join('siswa', 'siswa.nip', 'siswa_nip')
+            ->where( ['kelas_id' => $kelas->id] )
+            ->orderBy('kasus.created_at','ASC')
+            ->limit(3)
+            ->get();
+
+        if( Roles::checkAuthorization($kelas) == false ){
             return abort(403);
         }
+
+        return view('kelas.show', compact('kelas','kasus'));
     }
 
     /**

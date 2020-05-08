@@ -142,7 +142,7 @@ class AbsensiController extends Controller
             return redirect()
                 ->route('absensi.show-kelas', $kelas)
                 ->with('success', 'Absensi berhasil ditambahkan.');
-        }catch(Exception $e){
+        }catch(\Exception $e){
             DB::rollback();
             return redirect()
                 ->route('absensi.show-kelas', $kelas)

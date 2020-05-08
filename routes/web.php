@@ -92,19 +92,25 @@ Route::group(['middleware' => 'auth'],function(){
 
     //  route absensi
     Route::get('/absensi', 'AbsensiController@index')
+      ->middleware('Roles:Super Admin|Petugas Absensi')
       ->name('absensi.index');
     Route::get('/absensi/{kelas}', 'AbsensiController@showKelas')
+      ->middleware('Roles:Super Admin|Petugas Absensi')
       ->name('absensi.show-kelas');
     Route::get('/absensi/{kelas}/create', 'AbsensiController@create')
+      ->middleware('Roles:Super Admin|Petugas Absensi')
       ->name('absensi.create');
     Route::POST('/absensi/{kelas}/store', 'AbsensiController@store')
+      ->middleware('Roles:Super Admin|Petugas Absensi')
       ->name('absensi.store');
     Route::get('/absensi/{kelas}/edit', 'AbsensiController@edit')
       ->middleware('Roles:Super Admin')
       ->name('absensi.edit');
     Route::POST('/absensi/{kelas}/edit/get-data', 'AbsensiController@getDataSiswa')
+      ->middleware('Roles:Super Admin|Petugas Absensi')
       ->name('absensi.edit.get-data');
     Route::PUT('/absensi/{kelas}/update', 'AbsensiController@update')
+      ->middleware('Roles:Super Admin|Petugas Absensi')
       ->name('absensi.update');
 });
 

@@ -10,6 +10,7 @@ use App\Models\KategoriPoint;
 use App\Http\Requests\KasusRequest;
 use Illuminate\Http\Request;
 use DB;
+use Roles;
 
 class KasusController extends Controller
 {
@@ -113,6 +114,10 @@ class KasusController extends Controller
      */
     public function edit(Kasus $kasus)
     {
+        if( Roles::checkAuthorization($kasus) == false ){
+            return abort(404);
+        }
+
         $today = date('Y-m-d');
         return view('kasus.edit', compact('kasus', 'today'));
     }
@@ -145,6 +150,10 @@ class KasusController extends Controller
     public function destroy(Kasus $kasus)
     {
         try{
+            if( Roles::checkAuthorization($kasus) == false ){
+                return abort(404);
+            }
+            
             $kasus->delete();
 
             return redirect()
@@ -161,8 +170,17 @@ class KasusController extends Controller
      * Display data JSON for datatable
      */
     public function json(){
-        $kasus = Kasus::orderBy('created_at','DESC')
-            ->get();
+
+        if( Roles::has('Super Admin') ){
+            $kasus = Kasus::orderBy('created_at','DESC')
+                ->get();
+        }else{
+            $kasus = Kasus::where( ['user_id' => Roles::getId()] )
+                ->orderBy('created_at','DESC')
+                ->get();
+        }
+
+
         $datatables = datatables()
             ->of($kasus)
             ->addColumn('tanggal',function($data){
@@ -331,6 +349,11 @@ class KasusController extends Controller
     }
 
     public function rollback(Kasus $kasus){
+
+        if( Roles::checkAuthorization($kasus) == false ){
+            return abort(404);
+        }
+        
         $siswa = Siswa::where( ['nip' => $kasus->siswa_nip] )
             ->first();
         $point = Point::where( ['id' => $kasus->point_id] )
@@ -360,6 +383,7 @@ class KasusController extends Controller
                 ->with('error', 'Kasus gagal dirollback.');
         }
     }
+
 
 
 }

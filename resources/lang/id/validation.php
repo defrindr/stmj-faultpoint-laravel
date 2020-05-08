@@ -57,7 +57,7 @@ return [
         'array' => 'Kolom :attribute harus mempunyai :value item atau lebih.',
     ],
     'image' => 'Kolom :attribute harus berupa sebuah gambar.',
-    'in' => 'The selected :attribute tidak valid.',
+    'in' => 'Pilihan :attribute tidak valid.',
     'in_array' => 'Kolom :attribute tidak ditemukan di :other.',
     'integer' => 'Kolom :attribute harus berupa sebuah angka.',
     'ip' => 'Kolom :attribute harus berupa alamat IP yang valid.',

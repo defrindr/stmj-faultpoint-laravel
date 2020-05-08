@@ -32,6 +32,15 @@ class Kelas extends Model
         return $prefix;
     }
 
+    function getTotalPoint($column,$id){
+        $pointKelas = $this->join('siswa','kelas_id','kelas.id')
+            ->groupBy('kelas_id')
+            ->having('kelas_id',$id)
+            ->sum( $column );
+        
+        return $pointKelas. " Point";
+    }
+
     function siswa() {
         return $this->hasMany('App\Models\Siswa');
     }

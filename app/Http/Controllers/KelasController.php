@@ -11,6 +11,8 @@ use App\Models\Siswa;
 use Illuminate\Http\Request;
 use App\Http\Requests\KelasRequest;
 
+use DB;
+
 class KelasController extends Controller
 {
     /**
@@ -165,10 +167,18 @@ class KelasController extends Controller
                 ->editColumn('jurusan',function($data){
                     return $data->jurusan->nama;
                 })
+                ->addColumn('akumulasi_point_pelanggaran',function($data) {
+                    return $data->getTotalPoint( 'point_pelanggaran',$data->id );
+                })
+                ->addColumn('akumulasi_point_penghargaan',function($data) {
+                    return $data->getTotalPoint( 'point_penghargaan',$data->id );
+                })
                 ->removeColumn([
                     'kelas_x',
                     'kelas_xi',
                     'kelas_xii',
+                    'updated_at',
+                    'created_at'
                 ])
                 ->addColumn('action',function($data){
                     $routeEdit = route('kelas.edit', $data);

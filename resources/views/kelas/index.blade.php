@@ -17,9 +17,8 @@
                         <th>Id</th>
                         <th>Prefix</th>
                         <th>Tahun Ajaran</th>
-                        <th>Jurusan</th>
-                        <th>Kelas</th>
-                        <th>Grade</th>
+                        <th>Penghargaan</th>
+                        <th>Pelanggaran</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -50,16 +49,12 @@
                     name: 'tahun_ajaran'
                 },
                 {
-                    data: 'jurusan',
-                    name: 'jurusan'
+                    data: 'akumulasi_point_penghargaan',
+                    name: 'akumulasi_point_penghargaan'
                 },
                 {
-                    data: 'kelas',
-                    name: 'kelas'
-                },
-                {
-                    data: 'grade',
-                    name: 'grade'
+                    data: 'akumulasi_point_pelanggaran',
+                    name: 'akumulasi_point_pelanggaran'
                 },
                 {
                     data: 'action',

@@ -72,6 +72,9 @@ Route::group(['middleware' => 'auth'],function(){
     Route::get('/absensi/{kelas}','AbsensiController@showKelas')->name('absensi.show-kelas');
     Route::get('/absensi/{kelas}/create','AbsensiController@create')->name('absensi.create');
     Route::POST('/absensi/{kelas}/store','AbsensiController@store')->name('absensi.store');
+    Route::get('/absensi/{kelas}/edit','AbsensiController@edit')->name('absensi.edit');
+    Route::POST('/absensi/{kelas}/edit/get-data','AbsensiController@getDataSiswa')->name('absensi.edit.get-data');
+    Route::PUT('/absensi/{kelas}/update','AbsensiController@update')->name('absensi.update');
     Route::get('/absensi/today','AbsensiController@store')->name('absensi.check-hari-ini');
 });
 

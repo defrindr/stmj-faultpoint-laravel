@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\UserRoles;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AbsensiRequest extends FormRequest
@@ -11,9 +13,24 @@ class AbsensiRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(Request $request)
     {
-        return true;
+        $permission = false;
+        if($request->isMethod('PUT')){
+            $roles = UserRoles::where(['user_id' => auth()->user()->id])
+                ->join('roles','roles.id','role_id')
+                ->get();
+
+            foreach($roles as $role){
+                if($role->nama == "Super Admin"){
+                    $permission = true;
+                }
+            }
+        }else{
+            $permission = true;
+        }
+
+        return $permission;
     }
 
     /**
@@ -21,13 +38,25 @@ class AbsensiRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
-        $rules = [
-            'siswa_nip' => 'required',
-            'status' => 'required',
-            'keterangan' => 'required'
-        ];
+        $rules = [];
+        if( $request->isMethod('PUT') ){
+            $array = ['hadir','bolos','alpha','ijin','sakit'];
+
+            $rules = [
+                'id' => 'required|numeric',
+                'siswa_nip' => 'required|numeric',
+                'status' => "required|in:hadir,bolos,alpha,ijin,sakit",
+                'keterangan' => 'required'
+            ];
+        }else{
+            $rules = [
+                'siswa_nip' => 'required|array',
+                'status' => 'required|array',
+                'keterangan' => 'required|array'
+            ];
+        }
 
         return $rules;
     }

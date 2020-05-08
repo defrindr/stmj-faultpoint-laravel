@@ -39,23 +39,17 @@
     <div class="card card-primary">
         <div class="card-header">
             <a href="{{ route('absensi.create', $kelas) }}" class="btn btn-primary mb-1 mr-1">Tambah Absen Hari Ini</a>
-            <a href="{{ route('absensi.create', $kelas) }}" class="btn btn-primary mb-1 mr-1">Ubah Data</a>
+            <a href="{{ route('absensi.edit', $kelas) }}" class="btn btn-primary mb-1 mr-1">Ubah Data</a>
             <button class="btn btn-primary mb-1 mr-1" onclick="showAdvSearch()">Advanced Filter</button>
         </div>
         <div class="card-body">
-            <form id="advanced-filter" class="form mb-5 pb-5">
+            <form id="advanced-filter" class="form mb-2 pb-3">
                 <div class="form-group">
                     <label for="tanggal">Tanggal</label>
                     <input type="date" name="tanggal" id="tanggal" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="jenis_ijin">Status Ijin</label>
-                    <select name="jenis_ijin" id="jenis_ijin" class="form-control">
-                        <option value="">-- Pilih Status Ijin --</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Cari Data</button>
+                    <button type="submit" class="btn btn-success" onclick="searchData(event)">Cari Data</button>
                 </div>
             </form>
             <table id="table-siswa" class="table table-hover table-stripped table-borderless w-100">
@@ -74,24 +68,16 @@
 
 @push('_js')
 <script>
-
-    let showAdvSearch = () => {
-        let target = document.querySelector('#advanced-filter');
-        let checkAttr = target.hasAttribute('style');
-
-        if(checkAttr){
-            target.removeAttribute('style')
-        }else{
-            target.setAttribute('style','display: block');
-        }
-    }
-    $(function () {
-        $(document).ready(function () {
-            $('#table-siswa').DataTable({
+    let dtTable = $('#table-siswa').DataTable({
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: "{{ route('datatables.absensi.siswa', $kelas) }}",
+                ajax: {
+                    url: `{{ route('datatables.absensi.siswa', $kelas) }}`,
+                    data: function(d){
+                        d.tanggal= $('#tanggal').val();
+                    }
+                },
                 columns: [{
                         data: 'nip',
                         name: 'nip'
@@ -130,8 +116,23 @@
                     });
                 }
             });
-        });
-    });
+
+    let searchData = (e) => {
+        e.preventDefault();
+
+        dtTable.draw();    
+    }
+
+    let showAdvSearch = () => {
+        let target = document.querySelector('#advanced-filter');
+        let checkAttr = target.hasAttribute('style');
+
+        if(checkAttr){
+            target.removeAttribute('style')
+        }else{
+            target.setAttribute('style','display: block');
+        }
+    }
 
 </script>
 @endpush

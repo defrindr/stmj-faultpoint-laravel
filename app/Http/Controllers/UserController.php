@@ -127,7 +127,7 @@ class UserController extends Controller
     {
         $checkUserLogin = auth()->user()->id === $user->id;
 
-        if($checkIfLogin){
+        if($checkUserLogin){
             return redirect()
                 ->route('user.index')
                 ->with('error', 'Tidak dapat menjalankan aksi ini kepada user yang sedang aktif.');

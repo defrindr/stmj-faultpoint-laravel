@@ -17,15 +17,7 @@ class AbsensiRequest extends FormRequest
     {
         $permission = false;
         if($request->isMethod('PUT')){
-            $roles = UserRoles::where(['user_id' => auth()->user()->id])
-                ->join('roles','roles.id','role_id')
-                ->get();
-
-            foreach($roles as $role){
-                if($role->nama == "Super Admin"){
-                    $permission = true;
-                }
-            }
+            if(\Roles::has('Super Admin')) $permission = true;
         }else{
             $permission = true;
         }

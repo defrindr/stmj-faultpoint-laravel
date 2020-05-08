@@ -17,4 +17,8 @@ class RolesValidation {
 		}
 		return $isRolePassed;
 	}
+
+	public static function getId(){
+		return auth()->user()->id;
+	}
 }

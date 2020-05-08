@@ -21,4 +21,16 @@ class RolesValidation {
 	public static function getId(){
 		return auth()->user()->id;
 	}
+
+
+    public static function checkAuthorization($data){
+        $authorization = false;
+        if( self::has('Super Admin') ){
+            $authorization = true;
+        }else{
+            if($data->user_id == self::getId()) $authorization = true;
+        }
+
+        return $authorization;
+    }
 }

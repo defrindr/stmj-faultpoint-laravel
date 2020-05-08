@@ -49,6 +49,11 @@ $sidebar = [
     "link" => route('kasus.index'),
     "icon" => "far fa-file-alt",
   ],
+  [
+    "title" => "Absensi",
+    "link" => route('absensi.index'),
+    "icon" => "far fa-bookmark",
+  ],
 ];
 @endphp
 

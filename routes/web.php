@@ -67,6 +67,12 @@ Route::group(['middleware' => 'auth'],function(){
     Route::resource('/kasus','KasusController');
     Route::post('kasus/get_siswa/{siswa}', 'KasusController@getSiswa');
     Route::post('kasus/get_point/{point}', 'KasusController@getPoint');
+    //  route absensi
+    Route::get('/absensi','AbsensiController@index')->name('absensi.index');
+    Route::get('/absensi/{kelas}','AbsensiController@showKelas')->name('absensi.show-kelas');
+    Route::get('/absensi/{kelas}/create','AbsensiController@create')->name('absensi.create');
+    Route::POST('/absensi/{kelas}/store','AbsensiController@store')->name('absensi.store');
+    Route::get('/absensi/today','AbsensiController@store')->name('absensi.check-hari-ini');
 });
 
 
@@ -95,6 +101,8 @@ Route::group(["middleware"=> "auth","prefix" => "datatables","as" => "datatables
     Route::get('/kategori-point/json','KategoriPointController@json')->name('kategori-point');
     Route::get('kategori-point/{kategori_point}/point/json','PointController@json')->name('kategori-point.show.point');
     Route::get('/kasus/json','KasusController@json')->name('kasus');
+    Route::get("absensi/json","AbsensiController@json")->name("absensi");
+    Route::get("absensi/{kelas}/json","AbsensiController@jsonSiswa")->name("absensi.siswa");
 });
 
 

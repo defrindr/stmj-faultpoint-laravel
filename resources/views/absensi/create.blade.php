@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
-@push('title', 'Daftar Absensi Kelas')
-@push('header-title', 'Daftar Absensi Kelas')
+@push('title', 'Tambah Absensi Kelas')
+@push('header-title', 'Tambah Absensi Kelas')
 
 @section('content')
 <div class="col-md-12">
@@ -14,7 +14,7 @@
                 </div>
                 <div class="form-group">
                     <a href="#" class="btn btn-primary mb-1 mr-1" onclick="addRow(event)">Tambah Kolom</a>
-                    <button class="btn btn-success mb-1 mr-1">Submit</button>
+                    <button class="btn btn-success mb-1 mr-1" id="btn-submit">Submit</button>
                     <a href="{{ route('absensi.show-kelas',$kelas) }}" class="btn btn-danger mb-1 mr-1">Kembali</a>
                 </div>
             </form>
@@ -81,6 +81,20 @@
 
     }
 
+    $('#btn-submit').on('click', function (e) {
+        e.preventDefault();
+        var form = $(this).parents('form');
+        Swal.fire({
+            title: "Apakah anda yakin?",
+            text: "Data akan ditambahkan ke dalam database setelah proses ini dijalankan.",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya!",
+            cancelButtonText: 'Tidak',
+        }).then((result) => {
+            if (result.value) form.submit();
+        });
+    });
     addRow();
 </script>
 @endpush

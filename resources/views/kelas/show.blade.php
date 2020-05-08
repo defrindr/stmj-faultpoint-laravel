@@ -9,7 +9,9 @@
     <div class="card card-default">
         <div class="card-header">
             <a href="{{ route('kelas.index') }}" class="btn btn-danger mb-2 mr-1">Kembali</a>
+            @if (Roles::has('Super Admin'))
             <a href="{{ route('kelas.edit', $kelas) }}" class="btn btn-primary mb-2 mr-1">Ubah</a>
+            @endif
         </div>
         <div class="card-body">
             <table class="table table-hover table-stripped">
@@ -36,7 +38,9 @@
 <div class="col-md-12">
     <div class="card card-success">
         <div class="card-header">
+            @if (Roles::has('Super Admin'))
             <a href="{{ route('siswa.create', $kelas) }}" class="btn btn-success mb-1 mr-1">Tambah Siswa</a>
+            @endif
         </div>
         <div class="card-body">
             <table id="table-siswa" class="table table-hover table-stripped table-borderless w-100">

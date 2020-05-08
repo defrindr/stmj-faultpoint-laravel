@@ -11,6 +11,7 @@ use App\Models\Siswa;
 use Illuminate\Http\Request;
 use App\Http\Requests\KelasRequest;
 use DB;
+use Roles;
 
 class KelasController extends Controller
 {
@@ -87,7 +88,15 @@ class KelasController extends Controller
      */
     public function show(Kelas $kelas)
     {
-        return view('kelas.show', compact('kelas'));
+        if(Roles::has('Super Admin')){
+            return view('kelas.show', compact('kelas'));
+        }else{
+            $isMatch = $kelas->user_id === Roles::getId();
+            if($isMatch){
+                return view('kelas.show', compact('kelas'));
+            }
+            return abort(403);
+        }
     }
 
     /**
@@ -153,7 +162,14 @@ class KelasController extends Controller
 
     public function json(){
 
-        $data = Kelas::orderBy('created_at','DESC')->get();
+        if(\Roles::has('Super Admin')){
+            $data = Kelas::orderBy('created_at','DESC')->get();
+        }else{
+            $user_id = auth()->user()->id;
+            $data = Kelas::where( ['user_id' => $user_id] )
+                ->orderBy('created_at','DESC')
+                ->get();
+        }
 
         return datatables()
                 ->of($data)
@@ -207,9 +223,13 @@ class KelasController extends Controller
                                 </button>
                             </form>";
 
-                        
 
-                    $button = "$buttonEdit $buttonDetail $buttonDestroy";
+                    if(\Roles::has('Super Admin')){
+                        $button = "$buttonEdit $buttonDetail $buttonDestroy";
+                    }else{
+                        $button = "$buttonDetail";
+                    }
+
                     return $button;
                 })
                 ->make(true);

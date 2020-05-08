@@ -14,7 +14,10 @@ class KelasRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        $authorization = false;
+        if(\Roles::has('Super Admin')) $authorization = true;
+
+        return $authorization;
     }
 
     /**

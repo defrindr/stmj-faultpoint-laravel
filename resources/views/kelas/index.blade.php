@@ -8,7 +8,9 @@
     <x-alerts :data="$errors" />
     <div class="card card-success">
         <div class="card-header">
-            <a href="{{ route('kelas.create') }}" class="btn btn-success mr-1 mb-1">Tambah</a>
+            @if (Roles::has('Super Admin'))
+                <a href="{{ route('kelas.create') }}" class="btn btn-success mr-1 mb-1">Tambah</a>
+            @endif
         </div>
         <div class="card-body">
             <table class="table table-striped table-borderless w-100" id="kelas-table">

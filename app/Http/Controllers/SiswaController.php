@@ -8,6 +8,7 @@ use App\Models\Kasus;
 use App\Http\Requests\SiswaRequest;
 use Illuminate\Http\Request;
 use DB;
+use Roles;
 
 class SiswaController extends Controller
 {
@@ -63,7 +64,19 @@ class SiswaController extends Controller
      */
     public function show(Kelas $kelas, Siswa $siswa)
     {
-        return view('siswa.show', compact('kelas', 'siswa'));
+        if($siswa->kelas_id === $kelas->id){
+            if(Roles::has('Super Admin')){
+                return view('siswa.show', compact('kelas', 'siswa'));
+            }else{
+                $isMatch = $kelas->user_id === Roles::getId();
+                if($isMatch){
+                    return view('siswa.show', compact('kelas', 'siswa'));
+                }
+                return abort(403);
+            }
+        }else{
+            return abort(404);
+        }
     }
 
     /**
@@ -121,9 +134,16 @@ class SiswaController extends Controller
     }
 
     public function json(Kelas $kelas){
-        $siswa = Siswa::where(['kelas_id' => $kelas->id])
-                ->select(['nip','nama','point_pelanggaran','point_penghargaan','kelas_id'])
-                ->get();
+        if(Roles::has('Super Admin')){
+            $siswa = Siswa::where( ['kelas_id' => $kelas->id] )
+                    ->select( ['nip','nama','point_pelanggaran','point_penghargaan','kelas_id'] )
+                    ->get();
+        }else{
+            $siswa = Siswa::where( ['kelas_id' => $kelas->id, 'kelas.user_id' => Roles::getId() ] )
+                    ->join('kelas', 'kelas.id', 'kelas_id')
+                    ->select( ['nip','nama','point_pelanggaran','point_penghargaan','kelas_id'] )
+                    ->get();
+        }
 
         $datatable = datatables()
             ->of($siswa)
@@ -153,8 +173,13 @@ class SiswaController extends Controller
                                 </button>
                             </form>";
                 
-                $html = "$buttonUpdate $buttonDetail $buttonDestroy";
-                return $html;
+
+                if(\Roles::has('Super Admin')){
+                    $button = "$buttonEdit $buttonDetail $buttonDestroy";
+                }else{
+                    $button = "$buttonDetail";
+                }
+                return $button;
             })
             ->make(true);
 

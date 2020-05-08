@@ -171,27 +171,38 @@ class KasusController extends Controller
             ->addColumn('action',function($data){
                 $routeEdit = route('kasus.edit',$data);
                 $routeDestroy = route('kasus.destroy',$data);
+                $routeRollback = route('kasus.rollback',$data);
                 $token = csrf_token();
 
                 $csrf = "
                     <input type='hidden' name='_token' value='$token'>";
-                $method = "
+                $methodDelete = "
                     <input type='hidden' name='_method' value='delete'>";
+                $methodPut = "
+                    <input type='hidden' name='_method' value='put'>";
 
                 $buttonEdit = "
                         <a href='$routeEdit' class='btn btn-primary mb-1 mr-1'>
                             <span class='fa fa-pencil-alt'></span> Ubah
                         </a>";
+                $buttonRollback = "
+                        <form  action='$routeRollback' class='d-inline-block' method='post'>
+                            $csrf
+                            $methodPut
+                            <button class='btn btn-warning mb-1 mr-1 deleteAlerts'>
+                                <span class='fa fa-sync'></span> Rollback
+                            </button>
+                        </form>";
                 $buttonDestroy = "
                         <form  action='$routeDestroy' class='d-inline-block' method='post'>
                             $csrf
-                            $method
+                            $methodDelete
                             <button class='btn btn-danger mb-1 mr-1 deleteAlerts'>
                                 <span class='fa fa-trash-alt'></span> Hapus
                             </button>
-                        </a>";
+                        </form>";
 
-                $buttons = "$buttonEdit $buttonDestroy";
+                $buttons = "$buttonEdit $buttonRollback $buttonDestroy";
                 return $buttons;
             })
             ->addColumn('nama_siswa',function($data){
@@ -318,5 +329,37 @@ class KasusController extends Controller
             'point' => $point->point. " Point"
         ]);
     }
+
+    public function rollback(Kasus $kasus){
+        $siswa = Siswa::where( ['nip' => $kasus->siswa_nip] )
+            ->first();
+        $point = Point::where( ['id' => $kasus->point_id] )
+            ->first();
+        $jenis_point = KategoriPoint::where( ['id' => $point->kategori_point_id] )
+            ->first()->jenis_point;
+
+        DB::beginTransaction();
+        
+        try{
+            if($jenis_point == "negatif"){
+                $updatedData = $siswa->point_pelanggaran - $point->point;
+                $siswa->update( ['point_pelanggaran' => $updatedData] );
+            }else{
+                $updatedData = $siswa->point_penghargaan - $point->point;
+                $siswa->update( ['point_penghargaan' => $updatedData] );
+            }
+            $kasus->delete();
+            DB::commit();
+            return redirect()
+                ->route('kasus.index')
+                ->with('success', 'Kasus berhasil dirollback.');
+        }catch(\Exception $e){
+            DB::rollback();
+            return redirect()
+                ->route('kasus.index')
+                ->with('error', 'Kasus gagal dirollback.');
+        }
+    }
+
 
 }

@@ -67,6 +67,7 @@ Route::group(['middleware' => 'auth'],function(){
     Route::resource('/kasus','KasusController');
     Route::post('kasus/get_siswa/{siswa}', 'KasusController@getSiswa');
     Route::post('kasus/get_point/{point}', 'KasusController@getPoint');
+    Route::put('kasus/{kasus}/rollback', 'KasusController@rollback')->name('kasus.rollback');
     //  route absensi
     Route::get('/absensi','AbsensiController@index')->name('absensi.index');
     Route::get('/absensi/{kelas}','AbsensiController@showKelas')->name('absensi.show-kelas');

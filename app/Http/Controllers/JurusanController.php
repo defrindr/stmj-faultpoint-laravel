@@ -124,7 +124,7 @@ class JurusanController extends Controller
                                 <button class='btn btn-danger mb-1 mr-1 deleteAlerts'>
                                     <span class='fa fa-trash-alt'></span> Hapus
                                 </button>
-                            </a>";
+                            </form>";
 
                     return $button;
                 })

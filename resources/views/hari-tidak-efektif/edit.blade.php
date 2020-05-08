@@ -8,8 +8,8 @@
     <x-alerts :data="$errors" />
     <div class="card card-default">
         <div class="card-body">
-            <form method="post" action="{{ route('hari-tidak-efektif.store', $hariTidakEfektif->id)  }}" class="form">
-                @method('patch')
+            <form method="post" action="{{ route('hari-tidak-efektif.update', $hariTidakEfektif->id)  }}" class="form">
+                @method('PUT')
                 @csrf
                 <div class="form-group">
                     <label for="tanggal">Tanggal</label>

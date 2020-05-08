@@ -82,10 +82,12 @@ class HariTidakEfektifController extends Controller
      */
     public function update(HariTidakEfektifRequest $request, HariTidakEfektif $hariTidakEfektif)
     {
-        // Set to kapital
-        $request->request->add(["keterangan" => ucfirst($request->keterangan)]);
+        $schema = [
+            "keterangan" => ucfirst( $request->keterangan ),
+            "status" => $request->status
+        ];
 
-        if($hariTidakEfektif->update( $request->all() ))
+        if( $hariTidakEfektif->update( $schema ) )
             return redirect()
                 ->route('hari-tidak-efektif.index')
                 ->with('success','Hari tidak efektif berhasil diubah');

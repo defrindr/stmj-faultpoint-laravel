@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class HariTidakEfektifRequest extends FormRequest
 {
@@ -14,6 +14,7 @@ class HariTidakEfektifRequest extends FormRequest
      */
     public function authorize()
     {
+        // enable route
         return true;
     }
 
@@ -25,12 +26,12 @@ class HariTidakEfektifRequest extends FormRequest
     public function rules(Request $request)
     {
         $rules = [
-            'keterangan' => 'required',
-            'status' => 'required|numeric|min:0|max:1'
+            'status' => 'required|in:0,1',
+            'keterangan' => 'required|min:1'
         ];
-
-        if($request->isMethod('POST')){
-            $rules += ['tanggal' => 'required|date'];
+        
+        if( $request->isMethod('PUT') ){
+            $rules += ['tanggal' => 'required|unique:hari_tidak_efektif,tanggal'];
         }
 
         return $rules;

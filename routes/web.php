@@ -106,8 +106,6 @@ Route::group(['middleware' => 'auth'],function(){
       ->name('absensi.edit.get-data');
     Route::PUT('/absensi/{kelas}/update', 'AbsensiController@update')
       ->name('absensi.update');
-    Route::get('/absensi/today', 'AbsensiController@store')
-      ->name('absensi.check-hari-ini');
 });
 
 
